@@ -16,11 +16,14 @@ public class BlogOpenApiWrapperKakaoImpl implements BlogOpenApiWrapper {
 
     private final String API_URL = "https://dapi.kakao.com/v2/search/blog";
     @Override
-    public OpenApiResponse search(String keyword, Sorting sorting, Integer limit, Integer start) {
+    public OpenApiResponse search(String keyword, Sorting sorting, Integer page, Integer size) {
         Map<String, String> header = new HashMap<>();
         header.put("Authorization", "KakaoAK f5aca1c30f55e20e989e8d0475a92956");
         Map<String, String> requestBody = new HashMap<>();
         requestBody.put("query", keyword);
+        requestBody.put("sort", sorting.getVar());
+        requestBody.put("page", page.toString());
+        requestBody.put("size", size.toString());
 
         String response = BlogOpenApi.get(header,"GET", API_URL + makeQuery(requestBody));
 

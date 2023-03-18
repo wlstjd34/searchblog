@@ -4,6 +4,7 @@ import com.wlstjd.searchblog.service.search.Sorting;
 import com.wlstjd.searchblog.service.search.openapi.kakao.dto.OpenApiResponse;
 
 import java.util.Map;
+import java.util.stream.Collectors;
 
 public interface BlogOpenApiWrapper {
     OpenApiResponse search(String query, Sorting sorting, Integer limit, Integer start);
@@ -13,10 +14,9 @@ public interface BlogOpenApiWrapper {
         if (elements.isEmpty()) {
             return "";
         }
-        builder.append("?");
-        for (Map.Entry<String, String> elem : elements.entrySet()) {
-            builder.append(elem.getKey()).append("=").append(elem.getValue());
-        }
-        return builder.toString();
+        String bodyString = elements.entrySet().stream()
+                .map(e -> e.getKey() + "=" + e.getValue())
+                .collect(Collectors.joining("&"));
+        return builder.append("?").append(bodyString).toString();
     }
 }
