@@ -7,7 +7,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 public interface BlogOpenApiWrapper {
-    OpenApiResponse search(String query, Sorting sorting, Integer limit, Integer start);
+    OpenApiResponse search(String query, Sorting sorting, Integer page, Integer size);
 
     default String makeQuery(Map<String, String> elements) {
         StringBuilder builder = new StringBuilder();
