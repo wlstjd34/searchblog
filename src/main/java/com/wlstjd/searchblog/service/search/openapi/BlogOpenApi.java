@@ -1,5 +1,7 @@
 package com.wlstjd.searchblog.service.search.openapi;
 
+import org.springframework.stereotype.Component;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -11,8 +13,9 @@ import java.nio.charset.StandardCharsets;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+@Component
 public class BlogOpenApi {
-    public static String get(Map<String, String> headers, String method, String requestContent) {
+    public String get(Map<String, String> headers, String method, String requestContent) {
         try {
             URL url = new URL(requestContent);
             HttpURLConnection con = (HttpURLConnection) url.openConnection();
@@ -33,13 +36,13 @@ public class BlogOpenApi {
         }
     }
 
-    private static void insertHeader(HttpURLConnection con, Map<String, String> headers) {
+    private void insertHeader(HttpURLConnection con, Map<String, String> headers) {
         for(Map.Entry<String, String> header : headers.entrySet()) {
             con.setRequestProperty(header.getKey(), header.getValue());
         }
     }
 
-    private static String readBody(InputStream body){
+    private String readBody(InputStream body){
         try (BufferedReader lineReader = new BufferedReader(new InputStreamReader(body, StandardCharsets.UTF_8))) {
             return lineReader.lines().collect(Collectors.joining(System.lineSeparator()));
         } catch (IOException e) {
