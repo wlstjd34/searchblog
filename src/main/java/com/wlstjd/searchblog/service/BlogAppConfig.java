@@ -36,6 +36,7 @@ public class BlogAppConfig {
     private Set<String> getConsumeContentTypes() {
         Set<String> consumes = new HashSet<>();
         consumes.add("application/json;charset=UTF-8");
+        consumes.add("application/x-www-form-urlencoded");
         return consumes;
     }
 
