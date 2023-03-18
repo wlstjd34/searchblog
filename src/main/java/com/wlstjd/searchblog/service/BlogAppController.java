@@ -8,7 +8,12 @@ import com.wlstjd.searchblog.service.search.Sorting;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.hateoas.EntityModel;
+import org.springframework.hateoas.Link;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.ArrayList;
+import java.util.List;
+
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.*;
 @RestController
 @RequestMapping
@@ -26,9 +31,18 @@ public class BlogAppController {
                                                               @RequestParam(value = "isFirst", required = false, defaultValue = "true") Boolean isFirst) {
         SearchServiceResponse result = searchService.search(query, Sorting.parseStr(sorting), page, size, isFirst);
 
-        return EntityModel.of(result,
-                linkTo(methodOn(BlogAppController.class).searchBlogLists(query, sorting, page, size, false)).withSelfRel()
-        );
+        List<Link> linkList = new ArrayList<>();
+        linkList.add(linkTo(methodOn(BlogAppController.class).searchBlogLists(query, sorting, page, size, false)).withSelfRel());
+        linkList.add(linkTo(methodOn(BlogAppController.class).searchBlogLists(query, "accuracy", page, size, false)).withRel("accuracy"));
+        linkList.add(linkTo(methodOn(BlogAppController.class).searchBlogLists(query, "recency", page, size, false)).withRel("recency"));
+        if (page > 1) {
+            linkList.add(linkTo(methodOn(BlogAppController.class).searchBlogLists(query, sorting, page - 1, size, false)).withRel("prev"));
+        }
+        if (!result.isEnd()) {
+            linkList.add(linkTo(methodOn(BlogAppController.class).searchBlogLists(query, sorting, page + 1, size, false)).withRel("next"));
+        }
+
+        return EntityModel.of(result, linkList);
     }
 
     @ApiOperation(value="인기 검색어", notes="인기 검색어의 리스트와 검색 횟수를 반환합니다")
