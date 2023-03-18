@@ -1,9 +1,9 @@
-package com.wlstjd.searchblog.service.popularservice;
+package com.wlstjd.searchblog.service.popular;
 
 import com.wlstjd.searchblog.persist.SearchWordEntity;
 import com.wlstjd.searchblog.persist.SearchWordRepo;
-import com.wlstjd.searchblog.service.dto.popular.PopularList;
-import com.wlstjd.searchblog.service.dto.popular.SearchWord;
+import com.wlstjd.searchblog.service.popular.dto.PopularList;
+import com.wlstjd.searchblog.service.popular.dto.SearchWord;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;

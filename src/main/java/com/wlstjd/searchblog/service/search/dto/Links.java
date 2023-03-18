@@ -1,4 +1,4 @@
-package com.wlstjd.searchblog.service.dto.searched;
+package com.wlstjd.searchblog.service.search.dto;
 
 public record Links(String base, String next, String self, String prev, String correct, String latest) {
 }

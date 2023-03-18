@@ -1,4 +1,4 @@
-package com.wlstjd.searchblog.service.dto.popular;
+package com.wlstjd.searchblog.service.popular.dto;
 
 import java.util.List;
 

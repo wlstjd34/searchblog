@@ -1,10 +1,10 @@
-package com.wlstjd.searchblog.service.searchservice;
+package com.wlstjd.searchblog.service.search;
 
 import com.wlstjd.searchblog.persist.SearchWordEntity;
 import com.wlstjd.searchblog.persist.SearchWordRepo;
-import com.wlstjd.searchblog.service.dto.searched.BlogInfo;
-import com.wlstjd.searchblog.service.dto.searched.Links;
-import com.wlstjd.searchblog.service.dto.searched.SearchResponse;
+import com.wlstjd.searchblog.service.search.dto.BlogInfo;
+import com.wlstjd.searchblog.service.search.dto.SearchServiceResponse;
+import com.wlstjd.searchblog.service.search.openapi.BlogOpenApi;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -12,12 +12,16 @@ import org.springframework.stereotype.Service;
 @AllArgsConstructor
 public class SearchService {
     private final SearchWordRepo searchWordRepo;
+    private final BlogOpenApi blogOpenApi;
 
-    public SearchResponse search(String query, Integer limit, Boolean isFirst) {
-        countingWordOfKeyWord(query);
+    public SearchServiceResponse search(String query, Sorting sorting, Integer limit, Integer start,  Boolean isFirst) {
+        if (isFirst) {
+            countingWordOfKeyWord(query);
+        }
 
-        return new SearchResponse(new Links("", "", "", "" ,"", ""),
-                0, new BlogInfo(), 0, 0);
+        blogOpenApi.search(query, sorting, limit, start);
+
+        return new SearchServiceResponse(new BlogInfo(), 0, 0);
     }
 
     private void countingWordOfKeyWord(String keyWord) {

@@ -1,9 +1,9 @@
-package com.wlstjd.searchblog.service.popularservice;
+package com.wlstjd.searchblog.service.popular;
 
 import com.wlstjd.searchblog.persist.SearchWordEntity;
 import com.wlstjd.searchblog.persist.SearchWordRepo;
-import com.wlstjd.searchblog.service.dto.popular.PopularList;
-import com.wlstjd.searchblog.service.dto.popular.SearchWord;
+import com.wlstjd.searchblog.service.popular.dto.PopularList;
+import com.wlstjd.searchblog.service.popular.dto.SearchWord;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import java.util.List;
