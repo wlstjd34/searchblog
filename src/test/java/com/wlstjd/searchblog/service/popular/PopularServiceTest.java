@@ -23,6 +23,7 @@ class PopularServiceTest {
 
     @BeforeAll
     public void insert() {
+        // given
         searchWordRepo.save(new SearchWordEntity("ab", 1));
         searchWordRepo.save(new SearchWordEntity("cd", 2));
         searchWordRepo.save(new SearchWordEntity("ef", 3));
@@ -46,9 +47,10 @@ class PopularServiceTest {
     @Test
     @DisplayName("입력된 검색어 중에서 상위 검색어 리스트를 가져오는지 테스트합니다")
     public void getRankingKeyWordTest() {
+        // when
         PopularList popularList = popularService.getLists();
         List<SearchWord> result = popularList.popularList();
-
+        //then
         Assertions.assertEquals(10,     result.size());
         Assertions.assertEquals("gh",   result.get(9).keyword());
         Assertions.assertEquals(4,      result.get(9).times());

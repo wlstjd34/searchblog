@@ -17,21 +17,27 @@ class BlogOpenApiWrapperKakaoImplTest {
     @Test
     @DisplayName("Kakao Blog Search에 대한 간단한 질의 테스트")
     public void simpleOpenApiCallTest() {
+        // when
         OpenApiResponse result = openApi.search("abc", Sorting.ACCURACY, 1, 10);
+        // then
         Assertions.assertEquals(10, result.documents().size());
     }
 
     @Test
     @DisplayName("Kakao Blog Search에 대한 간단한 질의 테스트 사이즈 변경")
     public void simpleOpenApiCallLargeSizeTest() {
+        // when
         OpenApiResponse result = openApi.search("abc", Sorting.ACCURACY, 1, 50);
+        // then
         Assertions.assertEquals(50, result.documents().size());
     }
 
     @Test
     @DisplayName("Kakao Blog Search에 대한 간단한 질의 테스트 페이지 변경")
     public void simpleOpenApiCallLargePageTest() {
+        // when
         OpenApiResponse result = openApi.search("abc", Sorting.ACCURACY, 3, 50);
+        // then
         Assertions.assertEquals(50, result.documents().size());
     }
 }
