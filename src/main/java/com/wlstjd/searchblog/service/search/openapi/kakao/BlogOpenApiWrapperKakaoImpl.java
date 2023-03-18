@@ -28,6 +28,9 @@ public class BlogOpenApiWrapperKakaoImpl implements BlogOpenApiWrapper {
         requestBody.put("size", size.toString());
 
         String response = blogOpenApi.get(header,"GET", API_URL + makeQuery(requestBody));
+        if (response == null) {
+            throw new RuntimeException("API 호출 결과 없음");
+        }
 
         ObjectMapper objectMapper = new ObjectMapper();
         OpenApiResponse result;
