@@ -37,5 +37,6 @@ class SearchServiceTest {
         Assertions.assertEquals(10, response.documents().size());
         Assertions.assertEquals(1, response.page());
         Assertions.assertEquals(10, response.size());
+        Assertions.assertFalse(response.isEnd());
     }
 }
