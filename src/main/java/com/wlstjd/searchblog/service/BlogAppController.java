@@ -22,12 +22,12 @@ public class BlogAppController {
     @PostMapping(value = "/search", produces = { "application/hal+json" })
     public SearchAPIResponse searchBlogLists(@RequestParam(value = "query") String query,
                                              @RequestParam(value = "sorting", required = false, defaultValue = "accuracy") String sorting,
-                                             @RequestParam(value = "limit", required = false, defaultValue = "10") Integer limit,
-                                             @RequestParam(value = "start", required = false, defaultValue = "10") Integer start,
+                                             @RequestParam(value = "page", required = false, defaultValue = "1") Integer page,
+                                             @RequestParam(value = "size", required = false, defaultValue = "10") Integer size,
                                              @RequestParam(value = "isFirst", required = false, defaultValue = "true") Boolean isFirst) {
-        SearchServiceResponse result = searchService.search(query, Sorting.parseStr(sorting), limit, start, isFirst);
+        SearchServiceResponse result = searchService.search(query, Sorting.parseStr(sorting), size, page, isFirst);
         return new SearchAPIResponse(new Links("", "", "", "" ,"", ""),
-                0, result.blogInfo(), result.size(), result.start());
+                result.documents(), result.size(), result.page());
     }
 
     @ApiOperation(value="인기 검색어", notes="인기 검색어의 리스트와 검색 횟수를 반환합니다")
