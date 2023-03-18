@@ -4,7 +4,7 @@ import com.wlstjd.searchblog.persist.SearchWordEntity;
 import com.wlstjd.searchblog.persist.SearchWordRepo;
 import com.wlstjd.searchblog.service.search.dto.BlogInfo;
 import com.wlstjd.searchblog.service.search.dto.SearchServiceResponse;
-import com.wlstjd.searchblog.service.search.openapi.BlogOpenApi;
+import com.wlstjd.searchblog.service.search.openapi.BlogOpenApiWrapper;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -12,7 +12,7 @@ import org.springframework.stereotype.Service;
 @AllArgsConstructor
 public class SearchService {
     private final SearchWordRepo searchWordRepo;
-    private final BlogOpenApi blogOpenApi;
+    private final BlogOpenApiWrapper blogOpenApi;
 
     public SearchServiceResponse search(String query, Sorting sorting, Integer limit, Integer start,  Boolean isFirst) {
         if (isFirst) {
