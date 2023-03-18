@@ -1,5 +1,8 @@
 # serchblog
 
+## Requirement
+- Java 17
+
 ## 사용된 라이브러리
 
 - Lombok : 코드 가독성 및 생산성 향상
