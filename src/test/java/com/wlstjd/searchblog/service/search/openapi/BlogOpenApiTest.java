@@ -16,7 +16,8 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 class BlogOpenApiTest {
     @Autowired
     private BlogOpenApi blogOpenApi;
-
+    @Value("${kakao.api.url}")
+    private String apiUrl;
     @Value("${kakao.api.token}")
     private String token;
     @Test
@@ -25,7 +26,7 @@ class BlogOpenApiTest {
         // when
         Map<String, String> header = new HashMap<>();
         header.put("Authorization", token);
-        String result = blogOpenApi.get(header, "GET", "https://dapi.kakao.com/v2/search/blog?query=abc");
+        String result = blogOpenApi.get(header, "GET", apiUrl + "?query=abc");
         // then
         Assertions.assertNotNull(result);
         Assertions.assertTrue(result.startsWith("{\"documents\""));
@@ -36,7 +37,7 @@ class BlogOpenApiTest {
     public void requestAPIResponseFailTest() {
         // when
         Map<String, String> header = new HashMap<>();
-        String result = blogOpenApi.get(header, "GET", "https://dapi.kakao.com/v2/search/blog");
+        String result = blogOpenApi.get(header, "GET", apiUrl + "");
         // then
         Assertions.assertNotNull(result);
         Assertions.assertTrue(result.startsWith("{\"errorType\":"));
