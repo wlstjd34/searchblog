@@ -3,7 +3,7 @@ package com.wlstjd.searchblog.service.search.openapi.naver;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.wlstjd.searchblog.service.search.Sorting;
-import com.wlstjd.searchblog.service.search.openapi.BlogOpenApi;
+import com.wlstjd.searchblog.service.search.openapi.OpenApiCaller;
 import com.wlstjd.searchblog.service.search.openapi.BlogOpenApiWrapper;
 import com.wlstjd.searchblog.service.search.openapi.dto.Document;
 import com.wlstjd.searchblog.service.search.openapi.dto.Meta;
@@ -26,8 +26,8 @@ public class BlogOpenApiWrapperNaverImpl extends BlogOpenApiWrapper {
     @Value("${naver.api.Secret}")
     private String naverSecret;
 
-    public BlogOpenApiWrapperNaverImpl(BlogOpenApi blogOpenApi) {
-        super(blogOpenApi);
+    public BlogOpenApiWrapperNaverImpl(OpenApiCaller openApiCaller) {
+        super(openApiCaller);
     }
 
     @Override

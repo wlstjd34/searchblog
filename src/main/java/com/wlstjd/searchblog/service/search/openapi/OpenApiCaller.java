@@ -15,7 +15,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 @Component
-public class BlogOpenApi {
+public class OpenApiCaller {
     public String get(Map<String, String> headers, String method, String requestContent) throws SocketTimeoutException {
         try {
             URL url = new URL(requestContent);

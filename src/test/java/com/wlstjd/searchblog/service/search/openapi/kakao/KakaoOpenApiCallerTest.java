@@ -1,6 +1,6 @@
 package com.wlstjd.searchblog.service.search.openapi.kakao;
 
-import com.wlstjd.searchblog.service.search.openapi.BlogOpenApi;
+import com.wlstjd.searchblog.service.search.openapi.OpenApiCaller;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -15,9 +15,9 @@ import java.util.Map;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @SpringBootTest
-class KakaoBlogOpenApiTest {
+class KakaoOpenApiCallerTest {
     @Autowired
-    private BlogOpenApi blogOpenApi;
+    private OpenApiCaller openApiCaller;
     @Value("${kakao.api.url}")
     private String apiUrl;
     @Value("${kakao.api.token}")
@@ -28,7 +28,7 @@ class KakaoBlogOpenApiTest {
         // when
         Map<String, String> header = new HashMap<>();
         header.put("Authorization", token);
-        String result = blogOpenApi.get(header, "GET", apiUrl + "?query=abc");
+        String result = openApiCaller.get(header, "GET", apiUrl + "?query=abc");
         // then
         Assertions.assertNotNull(result);
         Assertions.assertTrue(result.startsWith("{\"documents\""));
@@ -39,7 +39,7 @@ class KakaoBlogOpenApiTest {
     public void requestAPIResponseFailTest() throws SocketTimeoutException {
         // when
         Map<String, String> header = new HashMap<>();
-        String result = blogOpenApi.get(header, "GET", apiUrl + "");
+        String result = openApiCaller.get(header, "GET", apiUrl + "");
         // then
         Assertions.assertNotNull(result);
         Assertions.assertTrue(result.startsWith("{\"errorType\":"));
@@ -51,7 +51,7 @@ class KakaoBlogOpenApiTest {
         // when
         Map<String, String> header = new HashMap<>();
         Exception exception = assertThrows(RuntimeException.class,
-                () -> blogOpenApi.get(header, "GET", "hddps://dapi.kakao.com/v2/search/blog"));
+                () -> openApiCaller.get(header, "GET", "hddps://dapi.kakao.com/v2/search/blog"));
         // then
         Assertions.assertEquals("Wrong Protocol. Expected : http", exception.getMessage());
     }
@@ -62,7 +62,7 @@ class KakaoBlogOpenApiTest {
         // when
         Map<String, String> header = new HashMap<>();
         Exception exception = assertThrows(RuntimeException.class,
-                () -> blogOpenApi.get(header, "GET", "https://244.244.244.244"));
+                () -> openApiCaller.get(header, "GET", "https://244.244.244.244"));
         // then
         Assertions.assertEquals("IOException", exception.getMessage());
     }

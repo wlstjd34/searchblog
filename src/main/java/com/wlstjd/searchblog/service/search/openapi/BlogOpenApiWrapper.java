@@ -8,10 +8,10 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 public abstract class BlogOpenApiWrapper {
-    protected final BlogOpenApi blogOpenApi;
+    protected final OpenApiCaller openApiCaller;
 
-    public BlogOpenApiWrapper(BlogOpenApi blogOpenApi) {
-        this.blogOpenApi = blogOpenApi;
+    public BlogOpenApiWrapper(OpenApiCaller openApiCaller) {
+        this.openApiCaller = openApiCaller;
     }
 
     public OpenApiResponse search(String keyword, Sorting sorting, Integer page, Integer size)
@@ -19,7 +19,7 @@ public abstract class BlogOpenApiWrapper {
         Map<String, String> header = collectRequestHeader();
         Map<String, String> requestBody = collectRequestBody(keyword, sorting, page, size);
 
-        String response = blogOpenApi.get(header,"GET", getUri() + makeQuery(requestBody));
+        String response = openApiCaller.get(header,"GET", getUri() + makeQuery(requestBody));
         if (response == null) {
             throw new RuntimeException("API Response Failed");
         }
@@ -32,7 +32,7 @@ public abstract class BlogOpenApiWrapper {
     protected abstract Map<String, String> collectRequestHeader();
     protected abstract Map<String, String> collectRequestBody(String keyword, Sorting sorting, Integer page, Integer size);
 
-    public String makeQuery(Map<String, String> elements) {
+    public static String makeQuery(Map<String, String> elements) {
         StringBuilder builder = new StringBuilder();
         if (elements == null || elements.isEmpty()) {
             return "";

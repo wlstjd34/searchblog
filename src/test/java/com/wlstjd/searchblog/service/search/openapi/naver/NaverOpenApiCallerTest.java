@@ -1,6 +1,6 @@
 package com.wlstjd.searchblog.service.search.openapi.naver;
 
-import com.wlstjd.searchblog.service.search.openapi.BlogOpenApi;
+import com.wlstjd.searchblog.service.search.openapi.OpenApiCaller;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -15,9 +15,9 @@ import java.util.Map;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @SpringBootTest
-class NaverBlogOpenApiTest {
+class NaverOpenApiCallerTest {
     @Autowired
-    private BlogOpenApi blogOpenApi;
+    private OpenApiCaller openApiCaller;
     @Value("${naver.api.url}")
     private String apiUrl;
     @Value("${naver.api.id}")
@@ -31,7 +31,7 @@ class NaverBlogOpenApiTest {
         Map<String, String> headers = new HashMap<>();
         headers.put("X-Naver-Client-Id", naverId);
         headers.put("X-Naver-Client-Secret", naverSecret);
-        String result = blogOpenApi.get(headers, "GET", apiUrl + "?query=abc");
+        String result = openApiCaller.get(headers, "GET", apiUrl + "?query=abc");
         // then
         Assertions.assertNotNull(result);
         Assertions.assertTrue(result.startsWith("{\r\n\t\"lastBuildDate\""));
@@ -42,7 +42,7 @@ class NaverBlogOpenApiTest {
     public void requestAPIResponseFailTest() throws SocketTimeoutException {
         // when
         Map<String, String> header = new HashMap<>();
-        String result = blogOpenApi.get(header, "GET", apiUrl + "");
+        String result = openApiCaller.get(header, "GET", apiUrl + "");
         // then
         Assertions.assertNotNull(result);
         Assertions.assertTrue(result.startsWith("{\"errorMessage\""));
@@ -54,7 +54,7 @@ class NaverBlogOpenApiTest {
         // when
         Map<String, String> header = new HashMap<>();
         Exception exception = assertThrows(RuntimeException.class,
-                () -> blogOpenApi.get(header, "GET", "hddps://openapi.naver.com/v1/search/blog.json"));
+                () -> openApiCaller.get(header, "GET", "hddps://openapi.naver.com/v1/search/blog.json"));
         // then
         Assertions.assertEquals("Wrong Protocol. Expected : http", exception.getMessage());
     }
@@ -65,7 +65,7 @@ class NaverBlogOpenApiTest {
         // when
         Map<String, String> header = new HashMap<>();
         Exception exception = assertThrows(RuntimeException.class,
-                () -> blogOpenApi.get(header, "GET", "https://244.244.244.244"));
+                () -> openApiCaller.get(header, "GET", "https://244.244.244.244"));
         // then
         Assertions.assertEquals("IOException", exception.getMessage());
     }

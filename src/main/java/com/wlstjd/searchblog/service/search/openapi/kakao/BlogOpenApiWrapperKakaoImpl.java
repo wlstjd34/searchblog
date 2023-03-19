@@ -3,7 +3,7 @@ package com.wlstjd.searchblog.service.search.openapi.kakao;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.wlstjd.searchblog.service.search.Sorting;
-import com.wlstjd.searchblog.service.search.openapi.BlogOpenApi;
+import com.wlstjd.searchblog.service.search.openapi.OpenApiCaller;
 import com.wlstjd.searchblog.service.search.openapi.BlogOpenApiWrapper;
 import com.wlstjd.searchblog.service.search.openapi.dto.OpenApiResponse;
 import org.springframework.beans.factory.annotation.Value;
@@ -20,8 +20,8 @@ public class BlogOpenApiWrapperKakaoImpl extends BlogOpenApiWrapper {
     @Value("${kakao.api.token}")
     private String token;
 
-    public BlogOpenApiWrapperKakaoImpl(BlogOpenApi blogOpenApi) {
-        super(blogOpenApi);
+    public BlogOpenApiWrapperKakaoImpl(OpenApiCaller openApiCaller) {
+        super(openApiCaller);
     }
 
     @Override
