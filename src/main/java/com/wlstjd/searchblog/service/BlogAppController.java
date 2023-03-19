@@ -1,5 +1,7 @@
 package com.wlstjd.searchblog.service;
 
+import com.wlstjd.searchblog.persist.SearchWordEntity;
+import com.wlstjd.searchblog.persist.SearchWordRepo;
 import com.wlstjd.searchblog.service.popular.dto.PopularList;
 import com.wlstjd.searchblog.service.search.dto.SearchServiceResponse;
 import com.wlstjd.searchblog.service.popular.PopularService;
@@ -22,27 +24,51 @@ public class BlogAppController {
     private final SearchService searchService;
     private final PopularService popularService;
 
-    @ApiOperation(value="블로그 검색", notes="키워드를 통해 해당하는 블로그 리스트를 검색합니다.")
+    private final SearchWordRepo searchWordRepo;
+
+    @ApiOperation(value="블로그 검색", notes="키워드를 통해 해당하는 블로그 리스트를 검색합니다. 추가로 검색어 횟수를 증가시킵니다.")
     @PostMapping(value = "/search", produces = { "application/hal+json" })
-    public EntityModel<SearchServiceResponse> searchBlogLists(@RequestParam(value = "query") String query,
+    public EntityModel<SearchServiceResponse> postSearchBlogLists(@RequestParam(value = "query") String query,
                                                               @RequestParam(value = "sorting", required = false, defaultValue = "accuracy") String sorting,
                                                               @RequestParam(value = "page", required = false, defaultValue = "1") Integer page,
-                                                              @RequestParam(value = "size", required = false, defaultValue = "10") Integer size,
-                                                              @RequestParam(value = "isFirst", required = false, defaultValue = "true") Boolean isFirst) {
-        SearchServiceResponse result = searchService.search(query, Sorting.parseStr(sorting), page, size, isFirst);
+                                                              @RequestParam(value = "size", required = false, defaultValue = "10") Integer size) {
 
+        countingWordOfKeyWord(query);
+        return getSearchBlogLists(query, sorting, page, size);
+    }
+    private void countingWordOfKeyWord(String keyWord) {
+        SearchWordEntity presentWord = searchWordRepo.findByKeyword(keyWord);
+        if (presentWord == null) {
+            searchWordRepo.save(new SearchWordEntity(keyWord, 1));
+        } else {
+            presentWord.setTimes(presentWord.getTimes() + 1);
+            searchWordRepo.save(presentWord);
+        }
+    }
+
+
+    @ApiOperation(value="블로그 검색", notes="키워드를 통해 해당하는 블로그 리스트를 검색합니다.")
+    @GetMapping(value = "/search", produces = { "application/hal+json" })
+    public EntityModel<SearchServiceResponse> getSearchBlogLists(@RequestParam(value = "query") String query,
+                                                              @RequestParam(value = "sorting", required = false, defaultValue = "accuracy") String sorting,
+                                                              @RequestParam(value = "page", required = false, defaultValue = "1") Integer page,
+                                                              @RequestParam(value = "size", required = false, defaultValue = "10") Integer size) {
+        SearchServiceResponse result = searchService.search(query, Sorting.parseStr(sorting), page, size);
+        List<Link> linkList = makeLinks(query, sorting, page, size, result);
+        return EntityModel.of(result, linkList);
+    }
+    private static List<Link> makeLinks(String query, String sorting, Integer page, Integer size, SearchServiceResponse result) {
         List<Link> linkList = new ArrayList<>();
-        linkList.add(linkTo(methodOn(BlogAppController.class).searchBlogLists(query, sorting, page, size, false)).withSelfRel());
-        linkList.add(linkTo(methodOn(BlogAppController.class).searchBlogLists(query, "accuracy", page, size, false)).withRel("accuracy"));
-        linkList.add(linkTo(methodOn(BlogAppController.class).searchBlogLists(query, "recency", page, size, false)).withRel("recency"));
+        linkList.add(linkTo(methodOn(BlogAppController.class).getSearchBlogLists(query, sorting, page, size)).withSelfRel());
+        linkList.add(linkTo(methodOn(BlogAppController.class).getSearchBlogLists(query, "accuracy", page, size)).withRel("accuracy"));
+        linkList.add(linkTo(methodOn(BlogAppController.class).getSearchBlogLists(query, "recency", page, size)).withRel("recency"));
         if (page > 1) {
-            linkList.add(linkTo(methodOn(BlogAppController.class).searchBlogLists(query, sorting, page - 1, size, false)).withRel("prev"));
+            linkList.add(linkTo(methodOn(BlogAppController.class).getSearchBlogLists(query, sorting, page - 1, size)).withRel("prev"));
         }
         if (!result.isEnd()) {
-            linkList.add(linkTo(methodOn(BlogAppController.class).searchBlogLists(query, sorting, page + 1, size, false)).withRel("next"));
+            linkList.add(linkTo(methodOn(BlogAppController.class).getSearchBlogLists(query, sorting, page + 1, size)).withRel("next"));
         }
-
-        return EntityModel.of(result, linkList);
+        return linkList;
     }
 
     @ApiOperation(value="인기 검색어", notes="인기 검색어의 리스트와 검색 횟수를 반환합니다")
