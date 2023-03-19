@@ -47,14 +47,14 @@ public class BlogOpenApiWrapperNaverImpl extends BlogOpenApiWrapper {
     }
     private static OpenApiResponse openApiResponseAdapter(Rss rss) {
         Meta meta = metaAdapter(rss);
-        List<Document> documents = rss.channel().items().stream()
+        List<Document> documents = rss.items().stream()
                 .map(BlogOpenApiWrapperNaverImpl::documentAdapter)
                 .toList();
         return new OpenApiResponse(meta, documents);
     }
     private static Meta metaAdapter(Rss rss) {
-        return new Meta(rss.channel().total(), rss.channel().display(),
-                rss.channel().total().equals(rss.channel().start()));
+        return new Meta(rss.total(), rss.display(),
+                rss.total().equals(rss.start()));
     }
     private static Document documentAdapter(Item item) {
         return new Document(item.title(), item.description(), item.link(),

@@ -1,5 +1,6 @@
-package com.wlstjd.searchblog.service.search.openapi;
+package com.wlstjd.searchblog.service.search.openapi.naver;
 
+import com.wlstjd.searchblog.service.search.openapi.BlogOpenApi;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -13,23 +14,26 @@ import java.util.Map;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @SpringBootTest
-class BlogOpenApiTest {
+class NaverBlogOpenApiTest {
     @Autowired
     private BlogOpenApi blogOpenApi;
-    @Value("${kakao.api.url}")
+    @Value("${naver.api.url}")
     private String apiUrl;
-    @Value("${kakao.api.token}")
-    private String token;
+    @Value("${naver.api.id}")
+    private String naverId;
+    @Value("${naver.api.Secret}")
+    private String naverSecret;
     @Test
     @DisplayName("기본 API 호출에 대한 결과 테스트")
     public void requestAPISuccessTest() {
         // when
-        Map<String, String> header = new HashMap<>();
-        header.put("Authorization", token);
-        String result = blogOpenApi.get(header, "GET", apiUrl + "?query=abc");
+        Map<String, String> headers = new HashMap<>();
+        headers.put("X-Naver-Client-Id", naverId);
+        headers.put("X-Naver-Client-Secret", naverSecret);
+        String result = blogOpenApi.get(headers, "GET", apiUrl + "?query=abc");
         // then
         Assertions.assertNotNull(result);
-        Assertions.assertTrue(result.startsWith("{\"documents\""));
+        Assertions.assertTrue(result.startsWith("{\r\n\t\"lastBuildDate\""));
     }
 
     @Test
@@ -40,7 +44,7 @@ class BlogOpenApiTest {
         String result = blogOpenApi.get(header, "GET", apiUrl + "");
         // then
         Assertions.assertNotNull(result);
-        Assertions.assertTrue(result.startsWith("{\"errorType\":"));
+        Assertions.assertTrue(result.startsWith("{\"errorMessage\""));
     }
 
     @Test
@@ -49,7 +53,7 @@ class BlogOpenApiTest {
         // when
         Map<String, String> header = new HashMap<>();
         Exception exception = assertThrows(RuntimeException.class,
-                () -> blogOpenApi.get(header, "GET", "hddps://dapi.kakao.com/v2/search/blog"));
+                () -> blogOpenApi.get(header, "GET", "hddps://openapi.naver.com/v1/search/blog.json"));
         // then
         Assertions.assertEquals("Wrong Protocol. Expected : http", exception.getMessage());
     }

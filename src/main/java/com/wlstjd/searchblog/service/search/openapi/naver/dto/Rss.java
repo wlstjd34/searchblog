@@ -1,4 +1,6 @@
 package com.wlstjd.searchblog.service.search.openapi.naver.dto;
 
-public record Rss(Channel channel) {
+import java.util.List;
+
+public record Rss(String lastBuildDate, Integer total, Integer start, Integer display, List<Item> items) {
 }

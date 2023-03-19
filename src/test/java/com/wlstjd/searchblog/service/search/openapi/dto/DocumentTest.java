@@ -1,6 +1,5 @@
-package com.wlstjd.searchblog.service.search.openapi.kakao.dto;
+package com.wlstjd.searchblog.service.search.openapi.dto;
 
-import com.wlstjd.searchblog.service.search.openapi.dto.Document;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
