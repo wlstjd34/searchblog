@@ -30,9 +30,9 @@ public class BlogOpenApi {
                 return readBody(con.getErrorStream());
             }
         } catch (MalformedURLException e) {
-            throw new RuntimeException("MalformedURLException 발생");
+            throw new RuntimeException("Wrong Protocol. Expected : http");
         } catch (IOException e) {
-            throw new RuntimeException("URL Connection IOException 발생");
+            throw new RuntimeException("Wrong API Address");
         }
     }
 
