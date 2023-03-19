@@ -11,7 +11,7 @@ public interface BlogOpenApiWrapper {
 
     default String makeQuery(Map<String, String> elements) {
         StringBuilder builder = new StringBuilder();
-        if (elements.isEmpty()) {
+        if (elements == null || elements.isEmpty()) {
             return "";
         }
         String bodyString = elements.entrySet().stream()
