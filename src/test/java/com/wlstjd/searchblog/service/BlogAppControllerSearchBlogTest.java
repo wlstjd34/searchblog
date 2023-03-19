@@ -14,7 +14,7 @@ import java.util.Map;
 
 @SpringBootTest
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-class BlogAppControllerTest {
+class BlogAppControllerSearchBlogTest {
     @MockBean
     private BlogOpenApi blogOpenApi;
 
@@ -39,7 +39,81 @@ class BlogAppControllerTest {
     }
 
     @Test
-    @DisplayName("컨트롤러 첫 페이지 조회 테스트")
+    @DisplayName("POST /search 첫 페이지 조회 테스트")
+    public void controllerTest_postFirstPage() {
+        // when
+        EntityModel<SearchServiceResponse> response = blogAppController.postSearchBlogLists("abc", "accuracy", 1, 10);
+
+        // then
+        Assertions.assertNotNull(response);
+        Assertions.assertTrue(response.getLink("self").isPresent());
+        Assertions.assertEquals("http://localhost/search?query=abc&sorting=accuracy&page=1&size=10",
+                response.getLink("self").get().getHref());
+        Assertions.assertTrue(response.getLink("next").isPresent());
+        Assertions.assertEquals("http://localhost/search?query=abc&sorting=accuracy&page=2&size=10",
+                response.getLink("next").get().getHref());
+        Assertions.assertTrue(response.getLink("accuracy").isPresent());
+        Assertions.assertEquals("http://localhost/search?query=abc&sorting=accuracy&page=1&size=10",
+                response.getLink("accuracy").get().getHref());
+        Assertions.assertTrue(response.getLink("recency").isPresent());
+        Assertions.assertEquals("http://localhost/search?query=abc&sorting=recency&page=1&size=10",
+                response.getLink("recency").get().getHref());
+
+        Assertions.assertFalse(response.getLink("prev").isPresent());
+    }
+
+    @Test
+    @DisplayName("POST /search 중간 페이지 조회 테스트")
+    public void controllerTest_postMiddlePage() {
+        // when
+        EntityModel<SearchServiceResponse> response = blogAppController.postSearchBlogLists("abc", "accuracy", 3, 10);
+
+        // then
+        Assertions.assertNotNull(response);
+        Assertions.assertTrue(response.getLink("self").isPresent());
+        Assertions.assertEquals("http://localhost/search?query=abc&sorting=accuracy&page=3&size=10",
+                response.getLink("self").get().getHref());
+        Assertions.assertTrue(response.getLink("prev").isPresent());
+        Assertions.assertEquals("http://localhost/search?query=abc&sorting=accuracy&page=2&size=10",
+                response.getLink("prev").get().getHref());
+        Assertions.assertTrue(response.getLink("next").isPresent());
+        Assertions.assertEquals("http://localhost/search?query=abc&sorting=accuracy&page=4&size=10",
+                response.getLink("next").get().getHref());
+        Assertions.assertTrue(response.getLink("accuracy").isPresent());
+        Assertions.assertEquals("http://localhost/search?query=abc&sorting=accuracy&page=3&size=10",
+                response.getLink("accuracy").get().getHref());
+        Assertions.assertTrue(response.getLink("recency").isPresent());
+        Assertions.assertEquals("http://localhost/search?query=abc&sorting=recency&page=3&size=10",
+                response.getLink("recency").get().getHref());
+
+    }
+
+    @Test
+    @DisplayName("POST /search 마지막 페이지 조회 테스트")
+    public void controllerTest_postLastPage() {
+        // when
+        EntityModel<SearchServiceResponse> response = blogAppController.postSearchBlogLists("abc", "accuracy", 5, 10);
+
+        // then
+        Assertions.assertNotNull(response);
+        Assertions.assertTrue(response.getLink("self").isPresent());
+        Assertions.assertEquals("http://localhost/search?query=abc&sorting=accuracy&page=5&size=10",
+                response.getLink("self").get().getHref());
+        Assertions.assertTrue(response.getLink("prev").isPresent());
+        Assertions.assertEquals("http://localhost/search?query=abc&sorting=accuracy&page=4&size=10",
+                response.getLink("prev").get().getHref());
+        Assertions.assertTrue(response.getLink("accuracy").isPresent());
+        Assertions.assertEquals("http://localhost/search?query=abc&sorting=accuracy&page=5&size=10",
+                response.getLink("accuracy").get().getHref());
+        Assertions.assertTrue(response.getLink("recency").isPresent());
+        Assertions.assertEquals("http://localhost/search?query=abc&sorting=recency&page=5&size=10",
+                response.getLink("recency").get().getHref());
+
+        Assertions.assertFalse(response.getLink("next").isPresent());
+    }
+
+    @Test
+    @DisplayName("GET /search 첫 페이지 조회 테스트")
     public void controllerTest_getFirstPage() {
         // when
         EntityModel<SearchServiceResponse> response = blogAppController.getSearchBlogLists("abc", "accuracy", 1, 10);
@@ -63,7 +137,7 @@ class BlogAppControllerTest {
     }
 
     @Test
-    @DisplayName("컨트롤러 중간 페이지 조회 테스트")
+    @DisplayName("GET /search 중간 페이지 조회 테스트")
     public void controllerTest_getMiddlePage() {
         // when
         EntityModel<SearchServiceResponse> response = blogAppController.getSearchBlogLists("abc", "accuracy", 3, 10);
@@ -89,7 +163,7 @@ class BlogAppControllerTest {
     }
 
     @Test
-    @DisplayName("컨트롤러 마지막 페이지 조회 테스트")
+    @DisplayName("GET /search 마지막 페이지 조회 테스트")
     public void controllerTest_getLastPage() {
         // when
         EntityModel<SearchServiceResponse> response = blogAppController.getSearchBlogLists("abc", "accuracy", 5, 10);
