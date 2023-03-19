@@ -14,7 +14,7 @@ import java.util.Map;
 
 @SpringBootTest
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-class BlogAppControllerSearchBlogTest {
+class ControllerSearchBlogTest {
     @MockBean
     private BlogOpenApi blogOpenApi;
 
