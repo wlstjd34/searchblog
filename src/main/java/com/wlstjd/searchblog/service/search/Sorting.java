@@ -14,7 +14,7 @@ public enum Sorting {
         return switch (str) {
             case "accuracy" -> ACCURACY;
             case "recency" -> RECENCY;
-            default -> throw new IllegalArgumentException();
+            default -> throw new IllegalArgumentException("Undefined Sorting Type");
         };
     }
 }
