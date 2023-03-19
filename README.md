@@ -1,4 +1,4 @@
-# serchblog
+# search blog
 
 ## Requirement
 - Java 17
@@ -11,3 +11,4 @@
 - Spring HATEOAS : Pagination Result 생성
 - Spring Data JPA : Database 접근
 - H2 Database : 데이터 저장
+- Jacoco : 테스트 커버리지 측정용
