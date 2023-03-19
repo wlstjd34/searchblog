@@ -1,27 +1,33 @@
 package com.wlstjd.searchblog.service;
 
-import com.wlstjd.searchblog.service.search.dto.SearchServiceResponse;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.wlstjd.searchblog.service.search.openapi.OpenApiCaller;
 import org.junit.jupiter.api.*;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.hateoas.EntityModel;
+import org.springframework.test.web.servlet.MockMvc;
 
 import java.net.SocketTimeoutException;
 import java.util.HashMap;
 import java.util.Map;
 
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.redirectedUrl;
+
 @SpringBootTest
+@AutoConfigureMockMvc
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class ControllerSearchBlogTest {
     @MockBean
     private OpenApiCaller openApiCaller;
-
     @Autowired
-    private BlogAppController blogAppController;
+    private MockMvc mockMvc;
     @Value("${kakao.api.url}")
     private String apiUrl;
     @Value("${kakao.api.token}")
@@ -44,150 +50,144 @@ class ControllerSearchBlogTest {
     }
 
     @Test
-    @DisplayName("POST /search 첫 페이지 조회 테스트")
-    public void controllerTest_postFirstPage() {
+    @DisplayName("POST /search Redirect 테스트")
+    public void controller_PostRedirectTest() throws Exception {
         // when
-        EntityModel<SearchServiceResponse> response = blogAppController.postSearchBlogLists("abc", "accuracy", 1, 10);
-
-        // then
-        Assertions.assertNotNull(response);
-        Assertions.assertTrue(response.getLink("self").isPresent());
-        Assertions.assertEquals("http://localhost/search?query=abc&sorting=accuracy&page=1&size=10",
-                response.getLink("self").get().getHref());
-        Assertions.assertTrue(response.getLink("next").isPresent());
-        Assertions.assertEquals("http://localhost/search?query=abc&sorting=accuracy&page=2&size=10",
-                response.getLink("next").get().getHref());
-        Assertions.assertTrue(response.getLink("accuracy").isPresent());
-        Assertions.assertEquals("http://localhost/search?query=abc&sorting=accuracy&page=1&size=10",
-                response.getLink("accuracy").get().getHref());
-        Assertions.assertTrue(response.getLink("recency").isPresent());
-        Assertions.assertEquals("http://localhost/search?query=abc&sorting=recency&page=1&size=10",
-                response.getLink("recency").get().getHref());
-
-        Assertions.assertFalse(response.getLink("prev").isPresent());
-    }
-
-    @Test
-    @DisplayName("POST /search 중간 페이지 조회 테스트")
-    public void controllerTest_postMiddlePage() {
-        // when
-        EntityModel<SearchServiceResponse> response = blogAppController.postSearchBlogLists("abc", "accuracy", 3, 10);
-
-        // then
-        Assertions.assertNotNull(response);
-        Assertions.assertTrue(response.getLink("self").isPresent());
-        Assertions.assertEquals("http://localhost/search?query=abc&sorting=accuracy&page=3&size=10",
-                response.getLink("self").get().getHref());
-        Assertions.assertTrue(response.getLink("prev").isPresent());
-        Assertions.assertEquals("http://localhost/search?query=abc&sorting=accuracy&page=2&size=10",
-                response.getLink("prev").get().getHref());
-        Assertions.assertTrue(response.getLink("next").isPresent());
-        Assertions.assertEquals("http://localhost/search?query=abc&sorting=accuracy&page=4&size=10",
-                response.getLink("next").get().getHref());
-        Assertions.assertTrue(response.getLink("accuracy").isPresent());
-        Assertions.assertEquals("http://localhost/search?query=abc&sorting=accuracy&page=3&size=10",
-                response.getLink("accuracy").get().getHref());
-        Assertions.assertTrue(response.getLink("recency").isPresent());
-        Assertions.assertEquals("http://localhost/search?query=abc&sorting=recency&page=3&size=10",
-                response.getLink("recency").get().getHref());
-
-    }
-
-    @Test
-    @DisplayName("POST /search 마지막 페이지 조회 테스트")
-    public void controllerTest_postLastPage() {
-        // when
-        EntityModel<SearchServiceResponse> response = blogAppController.postSearchBlogLists("abc", "accuracy", 5, 10);
-
-        // then
-        Assertions.assertNotNull(response);
-        Assertions.assertTrue(response.getLink("self").isPresent());
-        Assertions.assertEquals("http://localhost/search?query=abc&sorting=accuracy&page=5&size=10",
-                response.getLink("self").get().getHref());
-        Assertions.assertTrue(response.getLink("prev").isPresent());
-        Assertions.assertEquals("http://localhost/search?query=abc&sorting=accuracy&page=4&size=10",
-                response.getLink("prev").get().getHref());
-        Assertions.assertTrue(response.getLink("accuracy").isPresent());
-        Assertions.assertEquals("http://localhost/search?query=abc&sorting=accuracy&page=5&size=10",
-                response.getLink("accuracy").get().getHref());
-        Assertions.assertTrue(response.getLink("recency").isPresent());
-        Assertions.assertEquals("http://localhost/search?query=abc&sorting=recency&page=5&size=10",
-                response.getLink("recency").get().getHref());
-
-        Assertions.assertFalse(response.getLink("next").isPresent());
+        mockMvc.perform(post("/search")
+                .param("query", "abc")
+                .param("sorting", "accuracy")
+                .param("page", "1")
+                .param("size", "10")
+                // then
+        ).andExpect(redirectedUrl("/search?query=abc&sorting=accuracy&page=1&size=10"));
     }
 
     @Test
     @DisplayName("GET /search 첫 페이지 조회 테스트")
-    public void controllerTest_getFirstPage() {
+    public void controllerTest_getFirstPage() throws Exception {
         // when
-        EntityModel<SearchServiceResponse> response = blogAppController.getSearchBlogLists("abc", "accuracy", 1, 10);
+        byte[] responseBytes = mockMvc.perform(get("/search")
+                        .param("query", "abc")
+                        .param("sorting", "accuracy")
+                        .param("page", "1")
+                        .param("size", "10")
+        ).andReturn().getResponse().getContentAsByteArray();
+
+        ObjectMapper objectMapper = new ObjectMapper();
+        EntityModel response = objectMapper.readValue(responseBytes, EntityModel.class);
 
         // then
         Assertions.assertNotNull(response);
-        Assertions.assertTrue(response.getLink("self").isPresent());
-        Assertions.assertEquals("http://localhost/search?query=abc&sorting=accuracy&page=1&size=10",
-                response.getLink("self").get().getHref());
-        Assertions.assertTrue(response.getLink("next").isPresent());
-        Assertions.assertEquals("http://localhost/search?query=abc&sorting=accuracy&page=2&size=10",
-                response.getLink("next").get().getHref());
-        Assertions.assertTrue(response.getLink("accuracy").isPresent());
-        Assertions.assertEquals("http://localhost/search?query=abc&sorting=accuracy&page=1&size=10",
-                response.getLink("accuracy").get().getHref());
-        Assertions.assertTrue(response.getLink("recency").isPresent());
-        Assertions.assertEquals("http://localhost/search?query=abc&sorting=recency&page=1&size=10",
-                response.getLink("recency").get().getHref());
+        HashMap<String, Object> contents = (HashMap<String, Object>)response.getContent();
+        HashMap<String, Object> links = (HashMap<String, Object>)contents.get("_links");
 
-        Assertions.assertFalse(response.getLink("prev").isPresent());
+        HashMap<String, String> selfLink = (HashMap<String, String>)links.get("self");
+        Assertions.assertNotNull(selfLink.get("href"));
+        Assertions.assertEquals("http://localhost/search?query=abc&sorting=accuracy&page=1&size=10",
+                selfLink.get("href"));
+
+        Assertions.assertNull(links.get("prev"));
+
+        HashMap<String, String> nextLink = (HashMap<String, String>)links.get("next");
+        Assertions.assertNotNull(nextLink.get("href"));
+        Assertions.assertEquals("http://localhost/search?query=abc&sorting=accuracy&page=2&size=10",
+                nextLink.get("href"));
+
+        HashMap<String, String> accuracyLink = (HashMap<String, String>)links.get("accuracy");
+        Assertions.assertNotNull(accuracyLink.get("href"));
+        Assertions.assertEquals("http://localhost/search?query=abc&sorting=accuracy&page=1&size=10",
+                accuracyLink.get("href"));
+
+        HashMap<String, String> recencyLink = (HashMap<String, String>)links.get("recency");
+        Assertions.assertNotNull(recencyLink.get("href"));
+        Assertions.assertEquals("http://localhost/search?query=abc&sorting=recency&page=1&size=10",
+                recencyLink.get("href"));
     }
 
     @Test
     @DisplayName("GET /search 중간 페이지 조회 테스트")
-    public void controllerTest_getMiddlePage() {
+    public void controllerTest_getMiddlePage() throws Exception {
         // when
-        EntityModel<SearchServiceResponse> response = blogAppController.getSearchBlogLists("abc", "accuracy", 3, 10);
+        byte[] responseBytes = mockMvc.perform(get("/search")
+                .param("query", "abc")
+                .param("sorting", "accuracy")
+                .param("page", "3")
+                .param("size", "10")
+        ).andReturn().getResponse().getContentAsByteArray();
+
+        ObjectMapper objectMapper = new ObjectMapper();
+        EntityModel response = objectMapper.readValue(responseBytes, EntityModel.class);
 
         // then
         Assertions.assertNotNull(response);
-        Assertions.assertTrue(response.getLink("self").isPresent());
-        Assertions.assertEquals("http://localhost/search?query=abc&sorting=accuracy&page=3&size=10",
-                response.getLink("self").get().getHref());
-        Assertions.assertTrue(response.getLink("prev").isPresent());
-        Assertions.assertEquals("http://localhost/search?query=abc&sorting=accuracy&page=2&size=10",
-                response.getLink("prev").get().getHref());
-        Assertions.assertTrue(response.getLink("next").isPresent());
-        Assertions.assertEquals("http://localhost/search?query=abc&sorting=accuracy&page=4&size=10",
-                response.getLink("next").get().getHref());
-        Assertions.assertTrue(response.getLink("accuracy").isPresent());
-        Assertions.assertEquals("http://localhost/search?query=abc&sorting=accuracy&page=3&size=10",
-                response.getLink("accuracy").get().getHref());
-        Assertions.assertTrue(response.getLink("recency").isPresent());
-        Assertions.assertEquals("http://localhost/search?query=abc&sorting=recency&page=3&size=10",
-                response.getLink("recency").get().getHref());
+        HashMap<String, Object> contents = (HashMap<String, Object>)response.getContent();
+        HashMap<String, Object> links = (HashMap<String, Object>)contents.get("_links");
 
+        HashMap<String, String> selfLink = (HashMap<String, String>)links.get("self");
+        Assertions.assertNotNull(selfLink.get("href"));
+        Assertions.assertEquals("http://localhost/search?query=abc&sorting=accuracy&page=3&size=10",
+                selfLink.get("href"));
+
+        HashMap<String, String> prevLink = (HashMap<String, String>)links.get("prev");
+        Assertions.assertNotNull(prevLink.get("href"));
+        Assertions.assertEquals("http://localhost/search?query=abc&sorting=accuracy&page=2&size=10",
+                prevLink.get("href"));
+
+        HashMap<String, String> nextLink = (HashMap<String, String>)links.get("next");
+        Assertions.assertNotNull(nextLink.get("href"));
+        Assertions.assertEquals("http://localhost/search?query=abc&sorting=accuracy&page=4&size=10",
+                nextLink.get("href"));
+
+        HashMap<String, String> accuracyLink = (HashMap<String, String>)links.get("accuracy");
+        Assertions.assertNotNull(accuracyLink.get("href"));
+        Assertions.assertEquals("http://localhost/search?query=abc&sorting=accuracy&page=3&size=10",
+                accuracyLink.get("href"));
+
+        HashMap<String, String> recencyLink = (HashMap<String, String>)links.get("recency");
+        Assertions.assertNotNull(recencyLink.get("href"));
+        Assertions.assertEquals("http://localhost/search?query=abc&sorting=recency&page=3&size=10",
+                recencyLink.get("href"));
     }
 
     @Test
     @DisplayName("GET /search 마지막 페이지 조회 테스트")
-    public void controllerTest_getLastPage() {
+    public void controllerTest_getLastPage() throws Exception {
         // when
-        EntityModel<SearchServiceResponse> response = blogAppController.getSearchBlogLists("abc", "accuracy", 5, 10);
+        byte[] responseBytes = mockMvc.perform(get("/search")
+                .param("query", "abc")
+                .param("sorting", "accuracy")
+                .param("page", "5")
+                .param("size", "10")
+        ).andReturn().getResponse().getContentAsByteArray();
+
+        ObjectMapper objectMapper = new ObjectMapper();
+        EntityModel response = objectMapper.readValue(responseBytes, EntityModel.class);
 
         // then
         Assertions.assertNotNull(response);
-        Assertions.assertTrue(response.getLink("self").isPresent());
-        Assertions.assertEquals("http://localhost/search?query=abc&sorting=accuracy&page=5&size=10",
-                response.getLink("self").get().getHref());
-        Assertions.assertTrue(response.getLink("prev").isPresent());
-        Assertions.assertEquals("http://localhost/search?query=abc&sorting=accuracy&page=4&size=10",
-                response.getLink("prev").get().getHref());
-        Assertions.assertTrue(response.getLink("accuracy").isPresent());
-        Assertions.assertEquals("http://localhost/search?query=abc&sorting=accuracy&page=5&size=10",
-                response.getLink("accuracy").get().getHref());
-        Assertions.assertTrue(response.getLink("recency").isPresent());
-        Assertions.assertEquals("http://localhost/search?query=abc&sorting=recency&page=5&size=10",
-                response.getLink("recency").get().getHref());
+        HashMap<String, Object> contents = (HashMap<String, Object>)response.getContent();
+        HashMap<String, Object> links = (HashMap<String, Object>)contents.get("_links");
 
-        Assertions.assertFalse(response.getLink("next").isPresent());
+        HashMap<String, String> selfLink = (HashMap<String, String>)links.get("self");
+        Assertions.assertNotNull(selfLink.get("href"));
+        Assertions.assertEquals("http://localhost/search?query=abc&sorting=accuracy&page=5&size=10",
+                selfLink.get("href"));
+
+        HashMap<String, String> prevLink = (HashMap<String, String>)links.get("prev");
+        Assertions.assertNotNull(prevLink.get("href"));
+        Assertions.assertEquals("http://localhost/search?query=abc&sorting=accuracy&page=4&size=10",
+                prevLink.get("href"));
+
+        Assertions.assertNull(links.get("next"));
+
+        HashMap<String, String> accuracyLink = (HashMap<String, String>)links.get("accuracy");
+        Assertions.assertNotNull(accuracyLink.get("href"));
+        Assertions.assertEquals("http://localhost/search?query=abc&sorting=accuracy&page=5&size=10",
+                accuracyLink.get("href"));
+
+        HashMap<String, String> recencyLink = (HashMap<String, String>)links.get("recency");
+        Assertions.assertNotNull(recencyLink.get("href"));
+        Assertions.assertEquals("http://localhost/search?query=abc&sorting=recency&page=5&size=10",
+                recencyLink.get("href"));
     }
 }

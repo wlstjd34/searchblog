@@ -12,6 +12,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.Link;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import org.springframework.web.servlet.view.RedirectView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -28,13 +30,17 @@ public class BlogAppController {
 
     @ApiOperation(value="블로그 검색", notes="키워드를 통해 해당하는 블로그 리스트를 검색합니다. 추가로 검색어 횟수를 증가시킵니다.")
     @PostMapping(value = "/search", produces = { "application/hal+json" })
-    public EntityModel<SearchServiceResponse> postSearchBlogLists(@RequestParam(value = "query") String query,
-                                                              @RequestParam(value = "sorting", required = false, defaultValue = "accuracy") String sorting,
-                                                              @RequestParam(value = "page", required = false, defaultValue = "1") Integer page,
-                                                              @RequestParam(value = "size", required = false, defaultValue = "10") Integer size) {
-
+    public RedirectView postSearchBlogLists(RedirectAttributes redirect,
+                                            @RequestParam(value = "query") String query,
+                                            @RequestParam(value = "sorting", required = false, defaultValue = "accuracy") String sorting,
+                                            @RequestParam(value = "page", required = false, defaultValue = "1") Integer page,
+                                            @RequestParam(value = "size", required = false, defaultValue = "10") Integer size) {
         countingWordOfKeyWord(query);
-        return getSearchBlogLists(query, sorting, page, size);
+        redirect.addAttribute("query", query);
+        redirect.addAttribute("sorting", sorting);
+        redirect.addAttribute("page", page);
+        redirect.addAttribute("size", size);
+        return new RedirectView("/search");
     }
     private void countingWordOfKeyWord(String keyWord) {
         SearchWordEntity presentWord = searchWordRepo.findByKeyword(keyWord);

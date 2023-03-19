@@ -1,5 +1,6 @@
 package com.wlstjd.searchblog.service;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.wlstjd.searchblog.persist.SearchWordRepo;
 import com.wlstjd.searchblog.service.popular.dto.PopularList;
 import com.wlstjd.searchblog.service.search.openapi.OpenApiCaller;
@@ -7,23 +8,27 @@ import org.junit.jupiter.api.*;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.test.web.servlet.MockMvc;
 
 import java.net.SocketTimeoutException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+
 @SpringBootTest
+@AutoConfigureMockMvc
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public class ControllerGetPopularListTest {
     @MockBean
     private OpenApiCaller openApiCaller;
-
     @Autowired
-    private BlogAppController blogAppController;
-
+    private MockMvc mockMvc;
     @Autowired
     private SearchWordRepo searchWordRepo;
     @Value("${kakao.api.url}")
@@ -80,19 +85,27 @@ public class ControllerGetPopularListTest {
 
     @Test
     @DisplayName("POST /search 첫 페이지 조회 테스트")
-    public void controllerTest_postFirstPage() {
+    public void controllerTest_postFirstPage() throws Exception {
+        // given
         List<String> keywords = List.of("abc", "def", "ghi", "jkl", "mno", "pqr", "stu", "vwx", "yza",
                 "aabbcc", "ddeeff", "gghhii");
-        // when
         for (int i = 0; i < keywords.size(); i++) {
             for (int j = 0; j < i ; j++) {
-                blogAppController.postSearchBlogLists(keywords.get(i), "accuracy", 1, 10);
+                mockMvc.perform(post("/search")
+                        .param("query", keywords.get(i))
+                        .param("sorting", "accuracy")
+                        .param("page", "1")
+                        .param("size", "10")
+                );
             }
         }
+        // when
+        byte[] result = mockMvc.perform(get("/popular")).andReturn().getResponse().getContentAsByteArray();
+        ObjectMapper objectMapper = new ObjectMapper();
+        PopularList popularList = objectMapper.readValue(result, PopularList.class);
 
         // then
-        PopularList popularList = blogAppController.getPopularLists();
-        Assertions.assertNotNull(popularList);
+        Assertions.assertNotNull(result);
         Assertions.assertEquals(10, popularList.popularList().size());
         Assertions.assertEquals("gghhii", popularList.popularList().get(0).keyword());
         Assertions.assertEquals("ddeeff", popularList.popularList().get(1).keyword());
