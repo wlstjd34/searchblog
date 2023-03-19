@@ -1,6 +1,6 @@
 package com.wlstjd.searchblog.service.search.dto;
 
-import com.wlstjd.searchblog.service.search.openapi.kakao.dto.Document;
+import com.wlstjd.searchblog.service.search.openapi.dto.Document;
 
 import java.util.List;
 

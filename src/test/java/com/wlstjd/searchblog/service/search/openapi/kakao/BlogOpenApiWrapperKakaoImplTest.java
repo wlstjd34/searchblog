@@ -2,7 +2,7 @@ package com.wlstjd.searchblog.service.search.openapi.kakao;
 
 import com.wlstjd.searchblog.service.search.Sorting;
 import com.wlstjd.searchblog.service.search.openapi.BlogOpenApi;
-import com.wlstjd.searchblog.service.search.openapi.kakao.dto.OpenApiResponse;
+import com.wlstjd.searchblog.service.search.openapi.dto.OpenApiResponse;
 import org.junit.jupiter.api.*;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;

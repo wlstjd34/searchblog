@@ -6,14 +6,15 @@ import lombok.Getter;
 @Getter
 @AllArgsConstructor
 public enum Sorting {
-    ACCURACY("accuracy"), RECENCY("recency");
+    ACCURACY("accuracy", "sim"), RECENCY("recency", "date");
 
-    private final String var;
+    private final String kakaoExpr;
+    private final String naverExpr;
 
     public static Sorting parseStr(String str) {
         return switch (str) {
-            case "accuracy" -> ACCURACY;
-            case "recency" -> RECENCY;
+            case "accuracy", "sim" -> ACCURACY;
+            case "recency", "date" -> RECENCY;
             default -> throw new IllegalArgumentException("Undefined Sorting Type");
         };
     }

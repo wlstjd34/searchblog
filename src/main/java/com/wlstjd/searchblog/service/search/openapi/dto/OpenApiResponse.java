@@ -1,4 +1,4 @@
-package com.wlstjd.searchblog.service.search.openapi.kakao.dto;
+package com.wlstjd.searchblog.service.search.openapi.dto;
 
 import java.util.List;
 

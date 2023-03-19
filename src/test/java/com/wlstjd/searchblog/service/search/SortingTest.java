@@ -31,14 +31,14 @@ class SortingTest {
     @Test
     @DisplayName("ACCURACY에 대한 문자열을 반환하는지 테스트")
     public void getAccuraryTest() {
-        String str = Sorting.ACCURACY.getVar();
+        String str = Sorting.ACCURACY.getKakaoExpr();
         Assertions.assertEquals("accuracy", str);
     }
 
     @Test
     @DisplayName("RECENCY에 대한 문자열을 반환하는지 테스트")
     public void getRecencyTest() {
-        String str = Sorting.RECENCY.getVar();
+        String str = Sorting.RECENCY.getKakaoExpr();
         Assertions.assertEquals("recency", str);
     }
 }
