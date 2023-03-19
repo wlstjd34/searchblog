@@ -89,16 +89,25 @@ public class ControllerGetPopularListTest {
         PopularList popularList = blogAppController.getPopularLists();
         Assertions.assertNotNull(popularList);
         Assertions.assertEquals(10, popularList.popularList().size());
-        Assertions.assertEquals("SearchWord[keyword=gghhii, times=11]", popularList.popularList().get(0).toString());
-        Assertions.assertEquals("SearchWord[keyword=ddeeff, times=10]", popularList.popularList().get(1).toString());
-        Assertions.assertEquals("SearchWord[keyword=aabbcc, times=9]", popularList.popularList().get(2).toString());
-        Assertions.assertEquals("SearchWord[keyword=yza, times=8]", popularList.popularList().get(3).toString());
-        Assertions.assertEquals("SearchWord[keyword=vwx, times=7]", popularList.popularList().get(4).toString());
-        Assertions.assertEquals("SearchWord[keyword=stu, times=6]", popularList.popularList().get(5).toString());
-        Assertions.assertEquals("SearchWord[keyword=pqr, times=5]", popularList.popularList().get(6).toString());
-        Assertions.assertEquals("SearchWord[keyword=mno, times=4]", popularList.popularList().get(7).toString());
-        Assertions.assertEquals("SearchWord[keyword=jkl, times=3]", popularList.popularList().get(8).toString());
-        Assertions.assertEquals("SearchWord[keyword=ghi, times=2]", popularList.popularList().get(9).toString());
-
+        Assertions.assertEquals("gghhii", popularList.popularList().get(0).keyword());
+        Assertions.assertEquals("ddeeff", popularList.popularList().get(1).keyword());
+        Assertions.assertEquals("aabbcc", popularList.popularList().get(2).keyword());
+        Assertions.assertEquals("yza", popularList.popularList().get(3).keyword());
+        Assertions.assertEquals("vwx", popularList.popularList().get(4).keyword());
+        Assertions.assertEquals("stu", popularList.popularList().get(5).keyword());
+        Assertions.assertEquals("pqr", popularList.popularList().get(6).keyword());
+        Assertions.assertEquals("mno", popularList.popularList().get(7).keyword());
+        Assertions.assertEquals("jkl", popularList.popularList().get(8).keyword());
+        Assertions.assertEquals("ghi", popularList.popularList().get(9).keyword());
+        Assertions.assertEquals(11, popularList.popularList().get(0).times());
+        Assertions.assertEquals(10, popularList.popularList().get(1).times());
+        Assertions.assertEquals(9, popularList.popularList().get(2).times());
+        Assertions.assertEquals(8, popularList.popularList().get(3).times());
+        Assertions.assertEquals(7, popularList.popularList().get(4).times());
+        Assertions.assertEquals(6, popularList.popularList().get(5).times());
+        Assertions.assertEquals(5, popularList.popularList().get(6).times());
+        Assertions.assertEquals(4, popularList.popularList().get(7).times());
+        Assertions.assertEquals(3, popularList.popularList().get(8).times());
+        Assertions.assertEquals(2, popularList.popularList().get(9).times());
     }
 }
