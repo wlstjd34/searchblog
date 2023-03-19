@@ -2,9 +2,7 @@ package com.wlstjd.searchblog.service;
 
 import com.wlstjd.searchblog.service.search.dto.SearchServiceResponse;
 import com.wlstjd.searchblog.service.search.openapi.BlogOpenApi;
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -15,6 +13,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 @SpringBootTest
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class BlogAppControllerTest {
     @MockBean
     private BlogOpenApi blogOpenApi;
@@ -22,9 +21,8 @@ class BlogAppControllerTest {
     @Autowired
     private BlogAppController blogAppController;
 
-    @Test
-    @DisplayName("컨트롤러 테스트")
-    public void controllerTest() {
+    @BeforeEach
+    public void init() {
         // given
         Map<String, String> headers = new HashMap<>();
         headers.put("Authorization", "KakaoAK f5aca1c30f55e20e989e8d0475a92956");
@@ -38,11 +36,79 @@ class BlogAppControllerTest {
                 .thenReturn("{\"documents\":[{\"blogname\":\"따롱맘\",\"contents\":\"안나푸르나 <b>ABC</b>베이스캠프까지 등반을 드디어 실현했다 안나푸르나는 8000m급 봉우리1개, 7000m급 봉우리 13개, 6,000m급 봉우리16개로 이루어진 대산군이다 히말라야14좌 등반중 최고로 위험한 산이라고한다 우리나라도 지현옥대장 박영석대장 일행등이 여기서 사망했다고한다 \u200B 하지만 일반인 트래킹코스로는 여기가...\",\"datetime\":\"2023-03-12T13:48:00.000+09:00\",\"thumbnail\":\"https://search3.kakaocdn.net/argon/130x130_85_c/3dT9yMtCA2r\",\"title\":\"안나푸르나 <b>ABC</b>베이스캠프 등반\",\"url\":\"https://blog.naver.com/pmkmk1/223042084566\"},{\"blogname\":\"탱굴's 다이어리\",\"contents\":\"\u200B 나이가 들어갈수록 건강을 잘 챙겨야겠다는 생각이 드는 요즘입니다. 그중 한창 유명했던 <b>ABC</b> 주스, 저도 한번 마셔보기로 했어요. \u200B 검색하니 상품이 엄청 많더라고요. 그중에서도 저는 픽은 후기도 좋고 국내산 생착즙액 100%인 마이산 약초마을의 <b>ABC</b> 주스로 선택했어요.\u200B\u200B \u200B \u200B 택배 도착. 택배 박스 안에 또 상품 박스가...\",\"datetime\":\"2023-02-22T16:33:00.000+09:00\",\"thumbnail\":\"https://search2.kakaocdn.net/argon/130x130_85_c/2U2U6lECexC\",\"title\":\"[마이산 약초마을] 생착즙액 100% <b>ABC</b> 주스!!\",\"url\":\"https://blog.naver.com/baaguu/223024235397\"},{\"blogname\":\"유지어터의 참 쉬운 요리\",\"contents\":\"- 라티브 맛있게 만든 <b>ABC</b> 주스 - \u200B \u200B 내 이모는 몸매 관리에 많은 관심을 가지고 있다. 약 10년 전부터 그녀는 나만 보면 귀가 따갑도록 <b>ABC</b> 주스 추천했다. \u200B 해독주스로 이만한 것이 없다면서 디톡스주스 한 잔으로 하루를 시작하라고 권했다. 아침에 한 잔 마시면 다이어트에도 좋고 기분도 좋아진다며 그녀의 <b>ABC</b> 주스...\",\"datetime\":\"2023-02-17T15:47:00.000+09:00\",\"thumbnail\":\"https://search4.kakaocdn.net/argon/130x130_85_c/5shoF6EoOH0\",\"title\":\"해독주스 라티브 <b>ABC</b> 주스 추천 유지어터의 다이어트 아이템\",\"url\":\"https://blog.naver.com/crispynote/223018969899\"},{\"blogname\":\"소요블리 Beauty tips\",\"contents\":\"내가 이제껏 나쁜 것들을 많이 먹었으니, 내 몸에게 주는 선물로다가 .. 초록창에서 열심히 검색해 보았어요. 내돈내산 후기 시작해요. ^_^ \u200B \u200B \u200B 본리브 <b>ABC</b>주스 픽!!! \u200B 티톡스를 도와주는 주스를 사려고 했는데요. 예전에 눈팅했던 것들이 안보이더라구요. \u200B <b>ABC</b>주스를 사려고 한건 아니였지만, 쾌변의 선물을 안겨준다는...\",\"datetime\":\"2023-03-08T22:21:00.000+09:00\",\"thumbnail\":\"https://search3.kakaocdn.net/argon/130x130_85_c/6TY60HvPuv7\",\"title\":\"프리바이오틱스가 들어간 본리브 <b>ABC</b>주스 내돈내산 후기\",\"url\":\"https://blog.naver.com/dlqlehfl3355/223038957932\"},{\"blogname\":\"만나이츠 공식 블로그\",\"contents\":\"안녕하십니까! 마케터 M입니다. \u200B 오늘도 어김없이 찾아온 식이야기 타임입니다! 준비한 식이야기는 <b>ABC</b>쥬스에 대한 이야기입니다. 바로 시작해 보겠습니다! 오늘 제가 준비한 이야기는 <b>ABC</b> 주스인데요! 다들 드셔보셨나요? 저는 따로 만들어 먹지는 않지만, 식당이나 카페에 갔을 때 있으면 한 번씩? 챙겨 먹습니다...\",\"datetime\":\"2023-02-09T11:25:00.000+09:00\",\"thumbnail\":\"https://search2.kakaocdn.net/argon/130x130_85_c/EHI1UPREuBF\",\"title\":\"식이야기, <b>ABC</b> 제대로 알고 먹기!\",\"url\":\"https://blog.naver.com/manna-eats/223010103364\"},{\"blogname\":\"머니머니해도 머니우스\",\"contents\":\"겜인재원 다니는 아들. 아침식사 안 하는 스따일이지만 빈속으로 보내기가 안타까워 디톡스 효과와 사과. 비트. 당근의 효능까지 한봉에 해결할 수 있는 <b>ABC</b> 쥬스 주문 \u200B 환절기에 감기 조심하라고 배도라지즙까지 보내주는 울 언니 싸랑해 까치골농원 경상남도 사천시 축동면 탑리길 19 [까치골농원(사천) - 상품 (상단...\",\"datetime\":\"2023-03-17T19:48:00.000+09:00\",\"thumbnail\":\"https://search3.kakaocdn.net/argon/130x130_85_c/BOt6Xi9qzMb\",\"title\":\"<b>ABC</b>주스 추천과 간편 주문방법\",\"url\":\"https://blog.naver.com/moneyus/223047734288\"},{\"blogname\":\"나의 늙은 고양이 콩깍지\",\"contents\":\"오기전에 살을 빼야 옷을 입을텐데 말이죠. 우리 모두 오늘부터 다이어트 1일해요. \u200B 오늘 소개드릴 디톡스주스는 재료 그대로 갈아 만든 비움 클렌저 <b>ABC</b> 주스예요.\u200B\u200B \u200B <b>ABC</b> 주스는 급속냉각방식으로 냉동상태로 배송오기때문에 냉동실에 보관해두시고 마시기 전날 냉장실로 옮겨놓으면 알맞게 녹아서 마시기 편했어요...\",\"datetime\":\"2023-03-01T14:16:00.000+09:00\",\"thumbnail\":\"https://search2.kakaocdn.net/argon/130x130_85_c/2TSDJMYQZ6s\",\"title\":\"비움 클렌즈 <b>ABC</b>주스로 디톡스다이어트해요\",\"url\":\"https://blog.naver.com/hw_0108/223031494979\"},{\"blogname\":\"뒹굴뒹굴\",\"contents\":\"발렌타인데이를 맞아 초콜릿 만들기를 해봤다! \u200B \uD83C\uDF6B \uD83C\uDF6B \uD83C\uDF6B #발렌타인데이 #초콜릿만들기 #<b>abc</b>초콜릿 #가나초콜릿 초콜릿 만들기 쫜!! \u200B \u200B 작년에도 했긴한데 아주 허접하게 했어가지고 좀 그랬는데 \u200B 이번에는 정성을 아주 듬뿍넣었더니 성공했다~ \u200B 땅땅이도 기대안했다고 했는데 서프라이즈로 받아서 기분좋아했음 ㅎㅎ 이런...\",\"datetime\":\"2023-02-14T18:04:00.000+09:00\",\"thumbnail\":\"https://search1.kakaocdn.net/argon/130x130_85_c/VQO2ES7LtE\",\"title\":\"<b>abc</b>초콜릿으로 초콜릿 만들기\uD83C\uDF69\uD83C\uDF6B\uD83D\uDC9D(23.2.12.)\",\"url\":\"https://blog.naver.com/limju28/223015535092\"},{\"blogname\":\"香\",\"contents\":\"챙겨주면서 몸속에 잔여 효소의 양을 늘려주고 소화력이 좋아지도록 하는거예요. 챙겨 먹으면서 관리할 수 있는 부분이니 다행이죠. 그러다 눈에 들어온 제품 <b>ABC</b> LAB, 이름부터 특이해서 눈길이 갔었는데 많은 효소들을 먹어왔지만 디톡스 <b>ABC</b>를 효소 먹으면서 할 수 있다는 건 큰 장점이라 생각했거든요. 디톡스 <b>ABC</b>란...\",\"datetime\":\"2023-03-09T17:00:00.000+09:00\",\"thumbnail\":\"https://search2.kakaocdn.net/argon/130x130_85_c/A1Y9X21LoV2\",\"title\":\"디톡스효소 :: 셀핏 <b>ABC</b>효소 효능 후기\",\"url\":\"https://blog.naver.com/hyang_flower/223039634921\"},{\"blogname\":\"그냥 일상 기록\",\"contents\":\"지지난주 비맞고... 저번주 캠핑다녀와서 차가 엉망이더라고요??! \u200B 정관에 세차 잘 하는 곳이 있다고 해서 다녀왔어요! <b>ABC</b> 스팀세차장 정관점 <b>ABC</b>스팀세차장 정관점 부산광역시 기장군 정관읍 구연방곡로 48 \u200B 동양마트에서 쭉 올라오다보면 아이비 어린이집과 소두방공원 맞은편에 위치해있어요 또는 황소인력 맞은편...\",\"datetime\":\"2023-03-09T10:36:00.000+09:00\",\"thumbnail\":\"https://search2.kakaocdn.net/argon/130x130_85_c/6EaQOfSfLT8\",\"title\":\"부산 세차 잘하는 곳 &#39;<b>ABC</b>스팀 세차장&#39; 정관점 후기\",\"url\":\"https://blog.naver.com/dnk216/223039294983\"}],\"meta\":{\"is_end\":false,\"pageable_count\":790,\"total_count\":780424}}");
         Mockito.when(blogOpenApi.get(headers, "GET", "https://dapi.kakao.com/v2/search/blog?size=10&query=abc&sort=accuracy&page=5"))
                 .thenReturn("{\"documents\":[{\"blogname\":\"쎄씨주부의 소꿉놀이터\",\"contents\":\"15일 - 24일 사이 제품으로 출고해드립니다 단。。。아보카도 제품은 원물 특성으로 인 해 12~20일 입니다 옵션은 총 네가지인데요 \u200B 1번과 2번 옵션은 <b>ABC</b>주스입니다. Apple Beet Carrot \u200B 위 세가지 재료로 만든 <b>ABC</b> 쥬스의 디톡스 기능은 다들 아실거에요~ \u200B 12개와 18개 구성으로 준비했습니다. \u200B 각각의 구성에 랜덤 세...\",\"datetime\":\"2023-02-28T15:20:00.000+09:00\",\"thumbnail\":\"\",\"title\":\"[공구]올가니카 클렌즈 쥬스, <b>ABC</b> 쥬스로 디톡스해요\",\"url\":\"https://blog.naver.com/sessyjubu2/223030426390\"},{\"blogname\":\"LiFES TYLE\",\"contents\":\"라이프스타일 블로거 상익스입니다 리오프닝으로 다시 활발해진 명동에 슈즈 멀티숍들이 다시 격돌 중이라는 소식을 듣고 업무차 방문해 보았어요 먼저 <b>ABC</b>마트 명동 길 점 기존 ST(1.0) 매장의 상위 버전 ST(2.0)을 표방한다고 합니다 건물 통째로 입점한 <b>ABC</b>마트 명동 길 점 기존에 ST, MS, GS 3개의 매장을 명동에...\",\"datetime\":\"2023-02-25T19:48:00.000+09:00\",\"thumbnail\":\"https://search2.kakaocdn.net/argon/130x130_85_c/7I2ibXioDol\",\"title\":\"명동 <b>ABC</b>마트 명동길점 vs슈마커 플러스 전격 비교\",\"url\":\"https://blog.naver.com/lifes_tyle/223027520172\"},{\"blogname\":\"RECORD\",\"contents\":\"\u200B \u200B 사이판에서 쇼핑하실 분은 티갤러리아 / <b>ABC</b>스토어 / 아이러브사이판 이 세군데만 방문하시면 됩니다 :)\u200B \u200B 티갤러리아는 구찌 프라다 등 명품 쇼핑 + 고디바를 저렴하게 구매할 수 있구요 <b>ABC</b>스토어는 여행 중 필요한 용품이나 마실거, 먹을거 사기 좋구 아기자기한 기념품 쇼핑에는 아이러브사이판만\u200B 들러도 좋을 듯...\",\"datetime\":\"2023-03-08T14:10:00.000+09:00\",\"thumbnail\":\"https://search1.kakaocdn.net/argon/130x130_85_c/BTU1B5AFeuo\",\"title\":\"사이판 기념품 쇼핑 : <b>ABC</b>스토어/아이러브사이판\",\"url\":\"https://blog.naver.com/mylemon12/223038432963\"},{\"blogname\":\"맛있게 놀꺼지롱\",\"contents\":\"서방과 다녀온 하와이 신혼여행 ~ ㅋ 열심히 쓴다고 썼는데 아직도 작성할게 산더미네..^^ \u200B 암튼 오늘 작성해볼것은 하와이 하면 딱 떠오르는 <b>ABC</b> STORE 하와이 편의점 하와이 <b>ABC</b> STORE 에이비씨 스토어 에이비씨 스토어는 하와이의 편의점이라 생각하면 됨! 하와이 곳곳에 자리잡고 있고 과장 조금 보태서 한건물에...\",\"datetime\":\"2023-02-22T16:30:00.000+09:00\",\"thumbnail\":\"https://search2.kakaocdn.net/argon/130x130_85_c/A5tHDjZSK1w\",\"title\":\"하와이 : 에이비씨스토어 <b>ABC</b> Store / 물, 기념품, 옷, 사은품\",\"url\":\"https://blog.naver.com/mrkimiscrazy/223024224721\"},{\"blogname\":\"변덕쟁이 일상기록\",\"contents\":\"[건강주스, 디톡스, 아침대용 추천, 비움<b>abc</b>주스\uD83C\uDF77] 디톡스를 위한 비움 <b>abc</b> 주스 후기 \u200B 입으로 다이어트를 외치고 있지만 막상 아침 공복에 나약해져서는 탕비실을 탐내는 나 자신.. \u200B 공복으로 아침에 뛰거나 무리하면 어지럽다 어지러워ㅠ \uD83D\uDC8A 가볍게 뭐라도 먹거나 마시는 것이 중요하다 (공복에 무리하면 어지러우신 분...\",\"datetime\":\"2023-02-22T14:39:00.000+09:00\",\"thumbnail\":\"https://search2.kakaocdn.net/argon/130x130_85_c/1ykGsnQyFVt\",\"title\":\"[디톡스 건강주스] 직접 갈아 만드는 비움 클렌즈 <b>abc</b> 주스 후기\",\"url\":\"https://blog.naver.com/clear_f/223024112616\"},{\"blogname\":\"소녀의 순수함과 요부의 섹시함\",\"contents\":\"\u200B #하와이 #와이키키 #<b>abc</b>마트 정말 자주 갔어요 \u200B 하와이여행 가서 편의점 정말 자주 갔었죠 물 사러 가고 선물 사러도 가고 아이 모자도 사고 과자도 사고 수시로 방문했던곳 \u200B 하와이 <b>abc</b> 스토어 \u200B 우리가 묵었던 호텔 1층에 위치하고 있어서 정말 수시로 방문 했었는데요 \u200B 임페리얼 하와이 리조트 앳 와이키키 1...\",\"datetime\":\"2023-02-02T15:20:00.000+09:00\",\"thumbnail\":\"https://search3.kakaocdn.net/argon/130x130_85_c/8EqGVChbsIC\",\"title\":\"하와이 와이키키 <b>abc</b>마트 정말 자주 갔어요\",\"url\":\"https://blog.naver.com/nuseehjh/222997348797\"},{\"blogname\":\"[Over The TOP - 경험이 곧 지식이다]\",\"contents\":\"\u200B \u200B \u200B \u200B 괌 <b>ABC</b> STORES에서 200달러 이상 깨알 쇼핑하고 알게 된 점들 사실 그대로 공유해 보겠으니 괌 여행하실 때 도움이 되면 좋겠네요 \u200B 괌 96913 Tamuning, Tamuning 1275 Pale San Vitores Road 155 괌 96913 Tamuning, Tamuning 1275 Pale San Vitores Road 155 \u200B \u200B \u200B 1. 첫째 날 여행 필수품 및 관광 기본 상품 구입...\",\"datetime\":\"2023-02-27T03:14:00.000+09:00\",\"thumbnail\":\"https://search2.kakaocdn.net/argon/130x130_85_c/HlGhCrnNJnH\",\"title\":\"괌 <b>ABC</b> STORES에서 200달러 이상 구매하고 알게 된 것들\",\"url\":\"https://blog.naver.com/jnlss/223028678969\"},{\"blogname\":\"JUNG군의 엘리어트 파동이론 비트코인 매매\",\"contents\":\"위 그림은 하나의 <b>ABC</b>파동이다 어떤 식으로 카운팅을 해야 하나? 가운데 형식의 <b>ABC</b>? 아니면 가장 오른쪽의 <b>ABC</b>? 가장 오른쪽의 파동은 틀린 카운팅이라고 할 수 있다. 가장 큰 조정파동이 아니기 때문이다. 가장큰 조정 파동을 기준으로 삼는다면 가운데 카운팅이 차라리 올바른 카운팅이라고 할 수 있다. 왼쪽부터...\",\"datetime\":\"2023-02-16T09:00:39.000+09:00\",\"thumbnail\":\"https://search3.kakaocdn.net/argon/130x130_85_c/B2NQdgN7oek\",\"title\":\"<b>ABC</b>파동 카운팅 방법\",\"url\":\"http://junggunbabo.tistory.com/60\"},{\"blogname\":\"아토피집밥, 휴식여행일기 by 사랑해김수미\",\"contents\":\"#<b>ABC</b>주스 만들기 #<b>ABC</b>쥬스 먹는법 #<b>ABC</b>쥬스비율 재료 최적의 맛~ 가벼운 #아침주스 \u200B \u200B 지난달부터 다시~ 아침주스 만들어 마시기 시작한 울집 배주스, 토마토주스, 사과케일주스 등 과일과 야채를 활용해서 다양하게 마시고 있는 중인데요~ 얼마전부터 신랑의 최애 아침주스가 되버린 <b>ABC</b>주스는 퇴근길에 비트를 직접 사...\",\"datetime\":\"2023-03-03T01:20:00.000+09:00\",\"thumbnail\":\"https://search3.kakaocdn.net/argon/130x130_85_c/2KWPMdp0l7k\",\"title\":\"<b>ABC</b>주스 만들기 재료 비율 먹는법 아침주스 <b>ABC</b>쥬스 만들기\",\"url\":\"https://blog.naver.com/lovekimsumi/223033120516\"},{\"blogname\":\"열린 결말\",\"contents\":\"\u200B 안녕하세요 :) 이번에는 요즘 많은 분들의 아침식사 대용으로 유명한 <b>abc</b> 주스 추천 및 후기를 들고 왔습니다! A(Apple) + B(Beet) + C(Carrot)로 사과, 비트, 당근 즙이 함유되어 있는 주스이고 일명 해독주스라고도 많이들 부르시더라구요! \u200B 아침에 사과는 금이라고 하죠?? 거기에다가 세포손상 억제, 토마토의 8...\",\"datetime\":\"2023-02-25T10:00:00.000+09:00\",\"thumbnail\":\"https://search4.kakaocdn.net/argon/130x130_85_c/KwY3mETpJW6\",\"title\":\"여에스더 <b>abc</b>주스 추천 내돈내산 후기\",\"url\":\"https://blog.naver.com/kang981023/223026616506\"}],\"meta\":{\"is_end\":true,\"pageable_count\":790,\"total_count\":780429}}");
+    }
 
+    @Test
+    @DisplayName("컨트롤러 첫 페이지 조회 테스트")
+    public void controllerTest_getFirstPage() {
         // when
         EntityModel<SearchServiceResponse> response = blogAppController.getSearchBlogLists("abc", "accuracy", 1, 10);
 
         // then
         Assertions.assertNotNull(response);
+        Assertions.assertTrue(response.getLink("self").isPresent());
+        Assertions.assertEquals("http://localhost/search?query=abc&sorting=accuracy&page=1&size=10",
+                response.getLink("self").get().getHref());
+        Assertions.assertTrue(response.getLink("next").isPresent());
+        Assertions.assertEquals("http://localhost/search?query=abc&sorting=accuracy&page=2&size=10",
+                response.getLink("next").get().getHref());
+        Assertions.assertTrue(response.getLink("accuracy").isPresent());
+        Assertions.assertEquals("http://localhost/search?query=abc&sorting=accuracy&page=1&size=10",
+                response.getLink("accuracy").get().getHref());
+        Assertions.assertTrue(response.getLink("recency").isPresent());
+        Assertions.assertEquals("http://localhost/search?query=abc&sorting=recency&page=1&size=10",
+                response.getLink("recency").get().getHref());
+
+        Assertions.assertFalse(response.getLink("prev").isPresent());
+    }
+
+    @Test
+    @DisplayName("컨트롤러 중간 페이지 조회 테스트")
+    public void controllerTest_getMiddlePage() {
+        // when
+        EntityModel<SearchServiceResponse> response = blogAppController.getSearchBlogLists("abc", "accuracy", 3, 10);
+
+        // then
+        Assertions.assertNotNull(response);
+        Assertions.assertTrue(response.getLink("self").isPresent());
+        Assertions.assertEquals("http://localhost/search?query=abc&sorting=accuracy&page=3&size=10",
+                response.getLink("self").get().getHref());
+        Assertions.assertTrue(response.getLink("prev").isPresent());
+        Assertions.assertEquals("http://localhost/search?query=abc&sorting=accuracy&page=2&size=10",
+                response.getLink("prev").get().getHref());
+        Assertions.assertTrue(response.getLink("next").isPresent());
+        Assertions.assertEquals("http://localhost/search?query=abc&sorting=accuracy&page=4&size=10",
+                response.getLink("next").get().getHref());
+        Assertions.assertTrue(response.getLink("accuracy").isPresent());
+        Assertions.assertEquals("http://localhost/search?query=abc&sorting=accuracy&page=3&size=10",
+                response.getLink("accuracy").get().getHref());
+        Assertions.assertTrue(response.getLink("recency").isPresent());
+        Assertions.assertEquals("http://localhost/search?query=abc&sorting=recency&page=3&size=10",
+                response.getLink("recency").get().getHref());
+
+    }
+
+    @Test
+    @DisplayName("컨트롤러 마지막 페이지 조회 테스트")
+    public void controllerTest_getLastPage() {
+        // when
+        EntityModel<SearchServiceResponse> response = blogAppController.getSearchBlogLists("abc", "accuracy", 5, 10);
+
+        // then
+        Assertions.assertNotNull(response);
+        Assertions.assertTrue(response.getLink("self").isPresent());
+        Assertions.assertEquals("http://localhost/search?query=abc&sorting=accuracy&page=5&size=10",
+                response.getLink("self").get().getHref());
+        Assertions.assertTrue(response.getLink("prev").isPresent());
+        Assertions.assertEquals("http://localhost/search?query=abc&sorting=accuracy&page=4&size=10",
+                response.getLink("prev").get().getHref());
+        Assertions.assertTrue(response.getLink("accuracy").isPresent());
+        Assertions.assertEquals("http://localhost/search?query=abc&sorting=accuracy&page=5&size=10",
+                response.getLink("accuracy").get().getHref());
+        Assertions.assertTrue(response.getLink("recency").isPresent());
+        Assertions.assertEquals("http://localhost/search?query=abc&sorting=recency&page=5&size=10",
+                response.getLink("recency").get().getHref());
+
+        Assertions.assertFalse(response.getLink("next").isPresent());
     }
 }
