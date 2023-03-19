@@ -4,6 +4,7 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import java.util.HashMap;
@@ -15,12 +16,15 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 class BlogOpenApiTest {
     @Autowired
     private BlogOpenApi blogOpenApi;
+
+    @Value("${kakao.api.token}")
+    private String token;
     @Test
     @DisplayName("기본 API 호출에 대한 결과 테스트")
     public void requestAPISuccessTest() {
         // when
         Map<String, String> header = new HashMap<>();
-        header.put("Authorization", "KakaoAK f5aca1c30f55e20e989e8d0475a92956");
+        header.put("Authorization", token);
         String result = blogOpenApi.get(header, "GET", "https://dapi.kakao.com/v2/search/blog?query=abc");
         // then
         Assertions.assertNotNull(result);
