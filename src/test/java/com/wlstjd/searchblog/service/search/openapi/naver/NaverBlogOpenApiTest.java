@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import java.net.SocketTimeoutException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -25,7 +26,7 @@ class NaverBlogOpenApiTest {
     private String naverSecret;
     @Test
     @DisplayName("기본 API 호출에 대한 결과 테스트")
-    public void requestAPISuccessTest() {
+    public void requestAPISuccessTest() throws SocketTimeoutException {
         // when
         Map<String, String> headers = new HashMap<>();
         headers.put("X-Naver-Client-Id", naverId);
@@ -38,7 +39,7 @@ class NaverBlogOpenApiTest {
 
     @Test
     @DisplayName("API 호출 실패에 대한 결과 테스트")
-    public void requestAPIResponseFailTest() {
+    public void requestAPIResponseFailTest() throws SocketTimeoutException {
         // when
         Map<String, String> header = new HashMap<>();
         String result = blogOpenApi.get(header, "GET", apiUrl + "");
@@ -66,6 +67,6 @@ class NaverBlogOpenApiTest {
         Exception exception = assertThrows(RuntimeException.class,
                 () -> blogOpenApi.get(header, "GET", "https://244.244.244.244"));
         // then
-        Assertions.assertEquals("Wrong API Address", exception.getMessage());
+        Assertions.assertEquals("IOException", exception.getMessage());
     }
 }

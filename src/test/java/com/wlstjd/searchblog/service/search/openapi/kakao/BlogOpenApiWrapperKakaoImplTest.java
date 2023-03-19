@@ -12,6 +12,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.net.SocketTimeoutException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -31,7 +32,7 @@ class BlogOpenApiWrapperKakaoImplTest {
     @Value("${kakao.api.token}")
     private String token;
     @BeforeEach
-    public void init() {
+    public void init() throws SocketTimeoutException {
         // given
         Map<String, String> headers = new HashMap<>();
         headers.put("Authorization", token);
@@ -54,7 +55,7 @@ class BlogOpenApiWrapperKakaoImplTest {
 
     @Test
     @DisplayName("Kakao Blog Search에 대한 간단한 질의 테스트")
-    public void kakaoOpenApiCallTest() {
+    public void kakaoOpenApiCallTest() throws SocketTimeoutException {
         // when
         OpenApiResponse result = openApi.search("abc", Sorting.ACCURACY, 1, 10);
         // then
@@ -63,7 +64,7 @@ class BlogOpenApiWrapperKakaoImplTest {
 
     @Test
     @DisplayName("Kakao Blog Search에 대한 간단한 질의 테스트 사이즈 변경")
-    public void kakaoOpenApiCallLargeSizeTest() {
+    public void kakaoOpenApiCallLargeSizeTest() throws SocketTimeoutException {
         // when
         OpenApiResponse result = openApi.search("abc", Sorting.ACCURACY, 1, 50);
         // then
@@ -72,7 +73,7 @@ class BlogOpenApiWrapperKakaoImplTest {
 
     @Test
     @DisplayName("Kakao Blog Search에 대한 간단한 질의 테스트 페이지 변경")
-    public void kakaoOpenApiCallAnotherPageTest() {
+    public void kakaoOpenApiCallAnotherPageTest() throws SocketTimeoutException {
         // when
         OpenApiResponse result = openApi.search("abc", Sorting.ACCURACY, 3, 50);
         // then

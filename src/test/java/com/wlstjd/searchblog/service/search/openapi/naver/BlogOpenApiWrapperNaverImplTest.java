@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 
+import java.net.SocketTimeoutException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -32,7 +33,7 @@ class BlogOpenApiWrapperNaverImplTest {
     private String naverSecret;
 
     @BeforeEach
-    public void init() {
+    public void init() throws SocketTimeoutException {
         // given
         Map<String, String> headers = new HashMap<>();
         headers.put("X-Naver-Client-Id", naverId);
@@ -47,7 +48,7 @@ class BlogOpenApiWrapperNaverImplTest {
 
     @Test
     @DisplayName("Naver Blog Search에 대한 간단한 질의 테스트")
-    public void naverOpenApiCallTest() {
+    public void naverOpenApiCallTest() throws SocketTimeoutException {
         // when
         OpenApiResponse result = openApi.search("abc", Sorting.ACCURACY, 1, 10);
         // then
@@ -56,7 +57,7 @@ class BlogOpenApiWrapperNaverImplTest {
 
     @Test
     @DisplayName("Naver Blog Search에 대한 간단한 질의 테스트 사이즈 변경")
-    public void naverOpenApiCallLargeSizeTest() {
+    public void naverOpenApiCallLargeSizeTest() throws SocketTimeoutException {
         // when
         OpenApiResponse result = openApi.search("abc", Sorting.ACCURACY, 1, 50);
         // then
@@ -65,7 +66,7 @@ class BlogOpenApiWrapperNaverImplTest {
 
     @Test
     @DisplayName("Naver Blog Search에 대한 간단한 질의 테스트 페이지 변경")
-    public void naverOpenApiCallAnotherPageTest() {
+    public void naverOpenApiCallAnotherPageTest() throws SocketTimeoutException {
         // when
         OpenApiResponse result = openApi.search("abc", Sorting.ACCURACY, 3, 50);
         // then

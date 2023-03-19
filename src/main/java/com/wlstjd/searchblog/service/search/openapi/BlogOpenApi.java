@@ -8,6 +8,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
+import java.net.SocketTimeoutException;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.util.Map;
@@ -15,7 +16,7 @@ import java.util.stream.Collectors;
 
 @Component
 public class BlogOpenApi {
-    public String get(Map<String, String> headers, String method, String requestContent) {
+    public String get(Map<String, String> headers, String method, String requestContent) throws SocketTimeoutException {
         try {
             URL url = new URL(requestContent);
             HttpURLConnection con = (HttpURLConnection) url.openConnection();
@@ -31,8 +32,10 @@ public class BlogOpenApi {
             }
         } catch (MalformedURLException e) {
             throw new RuntimeException("Wrong Protocol. Expected : http");
+        } catch (SocketTimeoutException e) {
+            throw e;
         } catch (IOException e) {
-            throw new RuntimeException("Wrong API Address");
+            throw new RuntimeException("IOException");
         }
     }
 

@@ -3,6 +3,7 @@ package com.wlstjd.searchblog.service.search.openapi;
 import com.wlstjd.searchblog.service.search.Sorting;
 import com.wlstjd.searchblog.service.search.openapi.dto.OpenApiResponse;
 
+import java.net.SocketTimeoutException;
 import java.util.Map;
 import java.util.stream.Collectors;
 
@@ -13,7 +14,8 @@ public abstract class BlogOpenApiWrapper {
         this.blogOpenApi = blogOpenApi;
     }
 
-    public OpenApiResponse search(String keyword, Sorting sorting, Integer page, Integer size) {
+    public OpenApiResponse search(String keyword, Sorting sorting, Integer page, Integer size)
+            throws SocketTimeoutException {
         Map<String, String> header = collectRequestHeader();
         Map<String, String> requestBody = collectRequestBody(keyword, sorting, page, size);
 

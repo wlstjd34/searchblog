@@ -10,6 +10,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.hateoas.EntityModel;
 
+import java.net.SocketTimeoutException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -26,7 +27,7 @@ class ControllerSearchBlogTest {
     @Value("${kakao.api.token}")
     private String token;
     @BeforeEach
-    public void init() {
+    public void init() throws SocketTimeoutException {
         // given
         Map<String, String> headers = new HashMap<>();
         headers.put("Authorization", token);
