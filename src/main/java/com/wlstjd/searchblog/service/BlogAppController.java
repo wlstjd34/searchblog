@@ -60,18 +60,16 @@ public class BlogAppController {
                                                               @RequestParam(value = "sorting", required = false, defaultValue = "accuracy") String sorting,
                                                               @RequestParam(value = "page", required = false, defaultValue = "1") Integer page,
                                                               @RequestParam(value = "size", required = false, defaultValue = "10") Integer size) {
-        if (checkValidation(sorting, page, size)) return ResponseEntity.badRequest().build();
+        if (!checkValidation(sorting, page, size)) return ResponseEntity.badRequest().build();
         SearchServiceResponse result = searchService.search(query, Sorting.parseStr(sorting), page, size);
         List<Link> linkList = makeLinks(query, sorting, page, size, result);
         return ResponseEntity.ok(EntityModel.of(result, linkList));
     }
 
     private boolean checkValidation(String sorting, Integer page, Integer size) {
-        if (sorting.compareTo("accuracy") != 0 && sorting.compareTo("sim") != 0
-            && sorting.compareTo("recency") !=0 && sorting.compareTo("date") != 0) return true;
-        if (page < 1 || page > 50) return true;
-        if (size < 1 || size > 50) return true;
-        return false;
+        if (sorting.compareTo("accuracy") != 0 && sorting.compareTo("recency") != 0) return false;
+        if (page < 1 || page > 50 || size < 1 || size > 50) return false;
+        return true;
     }
 
     private static List<Link> makeLinks(String query, String sorting, Integer page, Integer size, SearchServiceResponse result) {
