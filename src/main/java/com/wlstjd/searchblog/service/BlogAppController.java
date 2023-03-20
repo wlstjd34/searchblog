@@ -11,6 +11,7 @@ import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.Link;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.web.servlet.view.RedirectView;
@@ -55,14 +56,24 @@ public class BlogAppController {
 
     @ApiOperation(value="블로그 검색", notes="키워드를 통해 해당하는 블로그 리스트를 검색합니다.")
     @GetMapping(value = "/search", produces = { "application/hal+json" })
-    public EntityModel<SearchServiceResponse> getSearchBlogLists(@RequestParam(value = "query") String query,
+    public ResponseEntity getSearchBlogLists(@RequestParam(value = "query") String query,
                                                               @RequestParam(value = "sorting", required = false, defaultValue = "accuracy") String sorting,
                                                               @RequestParam(value = "page", required = false, defaultValue = "1") Integer page,
                                                               @RequestParam(value = "size", required = false, defaultValue = "10") Integer size) {
+        if (checkValidation(sorting, page, size)) return ResponseEntity.badRequest().build();
         SearchServiceResponse result = searchService.search(query, Sorting.parseStr(sorting), page, size);
         List<Link> linkList = makeLinks(query, sorting, page, size, result);
-        return EntityModel.of(result, linkList);
+        return ResponseEntity.ok(EntityModel.of(result, linkList));
     }
+
+    private boolean checkValidation(String sorting, Integer page, Integer size) {
+        if (sorting.compareTo("accuracy") != 0 && sorting.compareTo("sim") != 0
+            && sorting.compareTo("recency") !=0 && sorting.compareTo("date") != 0) return true;
+        if (page < 1 || page > 50) return true;
+        if (size < 1 || size > 50) return true;
+        return false;
+    }
+
     private static List<Link> makeLinks(String query, String sorting, Integer page, Integer size, SearchServiceResponse result) {
         List<Link> linkList = new ArrayList<>();
         linkList.add(linkTo(methodOn(BlogAppController.class).getSearchBlogLists(query, sorting, page, size)).withSelfRel());
