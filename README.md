@@ -1,4 +1,5 @@
 # search blog
+- download build : https://github.com/wlstjd34/searchblog/raw/main/searchblog-0.0.1-SNAPSHOT.jar
 
 ## Requirement
 - Java 17
