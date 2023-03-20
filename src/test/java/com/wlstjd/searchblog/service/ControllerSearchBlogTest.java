@@ -1,6 +1,5 @@
 package com.wlstjd.searchblog.service;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.wlstjd.searchblog.service.search.openapi.OpenApiCaller;
 import org.junit.jupiter.api.*;
 import org.mockito.Mockito;
@@ -9,8 +8,8 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.hateoas.EntityModel;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.ResultActions;
 
 import java.net.SocketTimeoutException;
 import java.util.HashMap;
@@ -18,6 +17,7 @@ import java.util.Map;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.redirectedUrl;
 
 @SpringBootTest
@@ -66,128 +66,65 @@ class ControllerSearchBlogTest {
     @DisplayName("GET /search 첫 페이지 조회 테스트")
     public void controllerTest_getFirstPage() throws Exception {
         // when
-        byte[] responseBytes = mockMvc.perform(get("/search")
+        final ResultActions resultActions = mockMvc.perform(get("/search")
                         .param("query", "abc")
                         .param("sorting", "accuracy")
                         .param("page", "1")
-                        .param("size", "10")
-        ).andReturn().getResponse().getContentAsByteArray();
-
-        ObjectMapper objectMapper = new ObjectMapper();
-        EntityModel response = objectMapper.readValue(responseBytes, EntityModel.class);
-
+                        .param("size", "10"));
         // then
-        Assertions.assertNotNull(response);
-        HashMap<String, Object> contents = (HashMap<String, Object>)response.getContent();
-        HashMap<String, Object> links = (HashMap<String, Object>)contents.get("_links");
-
-        HashMap<String, String> selfLink = (HashMap<String, String>)links.get("self");
-        Assertions.assertNotNull(selfLink.get("href"));
-        Assertions.assertEquals("http://localhost/search?query=abc&sorting=accuracy&page=1&size=10",
-                selfLink.get("href"));
-
-        Assertions.assertNull(links.get("prev"));
-
-        HashMap<String, String> nextLink = (HashMap<String, String>)links.get("next");
-        Assertions.assertNotNull(nextLink.get("href"));
-        Assertions.assertEquals("http://localhost/search?query=abc&sorting=accuracy&page=2&size=10",
-                nextLink.get("href"));
-
-        HashMap<String, String> accuracyLink = (HashMap<String, String>)links.get("accuracy");
-        Assertions.assertNotNull(accuracyLink.get("href"));
-        Assertions.assertEquals("http://localhost/search?query=abc&sorting=accuracy&page=1&size=10",
-                accuracyLink.get("href"));
-
-        HashMap<String, String> recencyLink = (HashMap<String, String>)links.get("recency");
-        Assertions.assertNotNull(recencyLink.get("href"));
-        Assertions.assertEquals("http://localhost/search?query=abc&sorting=recency&page=1&size=10",
-                recencyLink.get("href"));
+        resultActions.andExpect(jsonPath("_links.self").isNotEmpty());
+        resultActions.andExpect(jsonPath("_links.self.href").value("http://localhost/search?query=abc&sorting=accuracy&page=1&size=10"));
+        resultActions.andExpect(jsonPath("_links.prev").doesNotExist());
+        resultActions.andExpect(jsonPath("_links.next").isNotEmpty());
+        resultActions.andExpect(jsonPath("_links.next.href").value("http://localhost/search?query=abc&sorting=accuracy&page=2&size=10"));
+        resultActions.andExpect(jsonPath("_links.accuracy").isNotEmpty());
+        resultActions.andExpect(jsonPath("_links.accuracy.href").value("http://localhost/search?query=abc&sorting=accuracy&page=1&size=10"));
+        resultActions.andExpect(jsonPath("_links.recency").isNotEmpty());
+        resultActions.andExpect(jsonPath("_links.recency.href").value("http://localhost/search?query=abc&sorting=recency&page=1&size=10"));
     }
 
     @Test
     @DisplayName("GET /search 중간 페이지 조회 테스트")
     public void controllerTest_getMiddlePage() throws Exception {
         // when
-        byte[] responseBytes = mockMvc.perform(get("/search")
+        final ResultActions resultActions = mockMvc.perform(get("/search")
                 .param("query", "abc")
                 .param("sorting", "accuracy")
                 .param("page", "3")
-                .param("size", "10")
-        ).andReturn().getResponse().getContentAsByteArray();
-
-        ObjectMapper objectMapper = new ObjectMapper();
-        EntityModel response = objectMapper.readValue(responseBytes, EntityModel.class);
+                .param("size", "10"));
 
         // then
-        Assertions.assertNotNull(response);
-        HashMap<String, Object> contents = (HashMap<String, Object>)response.getContent();
-        HashMap<String, Object> links = (HashMap<String, Object>)contents.get("_links");
-
-        HashMap<String, String> selfLink = (HashMap<String, String>)links.get("self");
-        Assertions.assertNotNull(selfLink.get("href"));
-        Assertions.assertEquals("http://localhost/search?query=abc&sorting=accuracy&page=3&size=10",
-                selfLink.get("href"));
-
-        HashMap<String, String> prevLink = (HashMap<String, String>)links.get("prev");
-        Assertions.assertNotNull(prevLink.get("href"));
-        Assertions.assertEquals("http://localhost/search?query=abc&sorting=accuracy&page=2&size=10",
-                prevLink.get("href"));
-
-        HashMap<String, String> nextLink = (HashMap<String, String>)links.get("next");
-        Assertions.assertNotNull(nextLink.get("href"));
-        Assertions.assertEquals("http://localhost/search?query=abc&sorting=accuracy&page=4&size=10",
-                nextLink.get("href"));
-
-        HashMap<String, String> accuracyLink = (HashMap<String, String>)links.get("accuracy");
-        Assertions.assertNotNull(accuracyLink.get("href"));
-        Assertions.assertEquals("http://localhost/search?query=abc&sorting=accuracy&page=3&size=10",
-                accuracyLink.get("href"));
-
-        HashMap<String, String> recencyLink = (HashMap<String, String>)links.get("recency");
-        Assertions.assertNotNull(recencyLink.get("href"));
-        Assertions.assertEquals("http://localhost/search?query=abc&sorting=recency&page=3&size=10",
-                recencyLink.get("href"));
+        resultActions.andExpect(jsonPath("_links.self").isNotEmpty());
+        resultActions.andExpect(jsonPath("_links.self.href").value("http://localhost/search?query=abc&sorting=accuracy&page=3&size=10"));
+        resultActions.andExpect(jsonPath("_links.prev").isNotEmpty());
+        resultActions.andExpect(jsonPath("_links.prev.href").value("http://localhost/search?query=abc&sorting=accuracy&page=2&size=10"));
+        resultActions.andExpect(jsonPath("_links.next").isNotEmpty());
+        resultActions.andExpect(jsonPath("_links.next.href").value("http://localhost/search?query=abc&sorting=accuracy&page=4&size=10"));
+        resultActions.andExpect(jsonPath("_links.accuracy").isNotEmpty());
+        resultActions.andExpect(jsonPath("_links.accuracy.href").value("http://localhost/search?query=abc&sorting=accuracy&page=3&size=10"));
+        resultActions.andExpect(jsonPath("_links.recency").isNotEmpty());
+        resultActions.andExpect(jsonPath("_links.recency.href").value("http://localhost/search?query=abc&sorting=recency&page=3&size=10"));
     }
 
     @Test
     @DisplayName("GET /search 마지막 페이지 조회 테스트")
     public void controllerTest_getLastPage() throws Exception {
         // when
-        byte[] responseBytes = mockMvc.perform(get("/search")
+        final ResultActions resultActions = mockMvc.perform(get("/search")
                 .param("query", "abc")
                 .param("sorting", "accuracy")
                 .param("page", "5")
-                .param("size", "10")
-        ).andReturn().getResponse().getContentAsByteArray();
-
-        ObjectMapper objectMapper = new ObjectMapper();
-        EntityModel response = objectMapper.readValue(responseBytes, EntityModel.class);
+                .param("size", "10"));
 
         // then
-        Assertions.assertNotNull(response);
-        HashMap<String, Object> contents = (HashMap<String, Object>)response.getContent();
-        HashMap<String, Object> links = (HashMap<String, Object>)contents.get("_links");
-
-        HashMap<String, String> selfLink = (HashMap<String, String>)links.get("self");
-        Assertions.assertNotNull(selfLink.get("href"));
-        Assertions.assertEquals("http://localhost/search?query=abc&sorting=accuracy&page=5&size=10",
-                selfLink.get("href"));
-
-        HashMap<String, String> prevLink = (HashMap<String, String>)links.get("prev");
-        Assertions.assertNotNull(prevLink.get("href"));
-        Assertions.assertEquals("http://localhost/search?query=abc&sorting=accuracy&page=4&size=10",
-                prevLink.get("href"));
-
-        Assertions.assertNull(links.get("next"));
-
-        HashMap<String, String> accuracyLink = (HashMap<String, String>)links.get("accuracy");
-        Assertions.assertNotNull(accuracyLink.get("href"));
-        Assertions.assertEquals("http://localhost/search?query=abc&sorting=accuracy&page=5&size=10",
-                accuracyLink.get("href"));
-
-        HashMap<String, String> recencyLink = (HashMap<String, String>)links.get("recency");
-        Assertions.assertNotNull(recencyLink.get("href"));
-        Assertions.assertEquals("http://localhost/search?query=abc&sorting=recency&page=5&size=10",
-                recencyLink.get("href"));
+        resultActions.andExpect(jsonPath("_links.self").isNotEmpty());
+        resultActions.andExpect(jsonPath("_links.self.href").value("http://localhost/search?query=abc&sorting=accuracy&page=5&size=10"));
+        resultActions.andExpect(jsonPath("_links.prev").isNotEmpty());
+        resultActions.andExpect(jsonPath("_links.prev.href").value("http://localhost/search?query=abc&sorting=accuracy&page=4&size=10"));
+        resultActions.andExpect(jsonPath("_links.next").doesNotExist());
+        resultActions.andExpect(jsonPath("_links.accuracy").isNotEmpty());
+        resultActions.andExpect(jsonPath("_links.accuracy.href").value("http://localhost/search?query=abc&sorting=accuracy&page=5&size=10"));
+        resultActions.andExpect(jsonPath("_links.recency").isNotEmpty());
+        resultActions.andExpect(jsonPath("_links.recency.href").value("http://localhost/search?query=abc&sorting=recency&page=5&size=10"));
     }
 }
