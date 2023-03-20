@@ -1,8 +1,6 @@
 package com.wlstjd.searchblog.service;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.wlstjd.searchblog.persist.SearchWordRepo;
-import com.wlstjd.searchblog.service.popular.dto.PopularList;
 import com.wlstjd.searchblog.service.search.openapi.OpenApiCaller;
 import org.junit.jupiter.api.*;
 import org.mockito.Mockito;
@@ -12,6 +10,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.ResultActions;
 
 import java.net.SocketTimeoutException;
 import java.util.HashMap;
@@ -20,6 +19,7 @@ import java.util.Map;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -100,32 +100,28 @@ public class ControllerGetPopularListTest {
             }
         }
         // when
-        byte[] result = mockMvc.perform(get("/popular")).andReturn().getResponse().getContentAsByteArray();
-        ObjectMapper objectMapper = new ObjectMapper();
-        PopularList popularList = objectMapper.readValue(result, PopularList.class);
+        final ResultActions resultActions = mockMvc.perform(get("/popular"));
 
         // then
-        Assertions.assertNotNull(result);
-        Assertions.assertEquals(10, popularList.popularList().size());
-        Assertions.assertEquals("gghhii", popularList.popularList().get(0).keyword());
-        Assertions.assertEquals("ddeeff", popularList.popularList().get(1).keyword());
-        Assertions.assertEquals("aabbcc", popularList.popularList().get(2).keyword());
-        Assertions.assertEquals("yza", popularList.popularList().get(3).keyword());
-        Assertions.assertEquals("vwx", popularList.popularList().get(4).keyword());
-        Assertions.assertEquals("stu", popularList.popularList().get(5).keyword());
-        Assertions.assertEquals("pqr", popularList.popularList().get(6).keyword());
-        Assertions.assertEquals("mno", popularList.popularList().get(7).keyword());
-        Assertions.assertEquals("jkl", popularList.popularList().get(8).keyword());
-        Assertions.assertEquals("ghi", popularList.popularList().get(9).keyword());
-        Assertions.assertEquals(11, popularList.popularList().get(0).times());
-        Assertions.assertEquals(10, popularList.popularList().get(1).times());
-        Assertions.assertEquals(9, popularList.popularList().get(2).times());
-        Assertions.assertEquals(8, popularList.popularList().get(3).times());
-        Assertions.assertEquals(7, popularList.popularList().get(4).times());
-        Assertions.assertEquals(6, popularList.popularList().get(5).times());
-        Assertions.assertEquals(5, popularList.popularList().get(6).times());
-        Assertions.assertEquals(4, popularList.popularList().get(7).times());
-        Assertions.assertEquals(3, popularList.popularList().get(8).times());
-        Assertions.assertEquals(2, popularList.popularList().get(9).times());
+        resultActions.andExpect(jsonPath("popularList[0].keyword").value("gghhii"));
+        resultActions.andExpect(jsonPath("popularList[1].keyword").value("ddeeff"));
+        resultActions.andExpect(jsonPath("popularList[2].keyword").value("aabbcc"));
+        resultActions.andExpect(jsonPath("popularList[3].keyword").value("yza"));
+        resultActions.andExpect(jsonPath("popularList[4].keyword").value("vwx"));
+        resultActions.andExpect(jsonPath("popularList[5].keyword").value("stu"));
+        resultActions.andExpect(jsonPath("popularList[6].keyword").value("pqr"));
+        resultActions.andExpect(jsonPath("popularList[7].keyword").value("mno"));
+        resultActions.andExpect(jsonPath("popularList[8].keyword").value("jkl"));
+        resultActions.andExpect(jsonPath("popularList[9].keyword").value("ghi"));
+        resultActions.andExpect(jsonPath("popularList[0].times").value(11));
+        resultActions.andExpect(jsonPath("popularList[1].times").value(10));
+        resultActions.andExpect(jsonPath("popularList[2].times").value(9));
+        resultActions.andExpect(jsonPath("popularList[3].times").value(8));
+        resultActions.andExpect(jsonPath("popularList[4].times").value(7));
+        resultActions.andExpect(jsonPath("popularList[5].times").value(6));
+        resultActions.andExpect(jsonPath("popularList[6].times").value(5));
+        resultActions.andExpect(jsonPath("popularList[7].times").value(4));
+        resultActions.andExpect(jsonPath("popularList[8].times").value(3));
+        resultActions.andExpect(jsonPath("popularList[9].times").value(2));
     }
 }
