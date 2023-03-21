@@ -2,7 +2,6 @@ package com.wlstjd.searchblog.service;
 
 import com.wlstjd.searchblog.persist.SearchWordEntity;
 import com.wlstjd.searchblog.persist.SearchWordRepo;
-import com.wlstjd.searchblog.service.popular.dto.PopularList;
 import com.wlstjd.searchblog.service.search.dto.SearchServiceResponse;
 import com.wlstjd.searchblog.service.popular.PopularService;
 import com.wlstjd.searchblog.service.search.SearchService;
@@ -88,7 +87,8 @@ public class BlogAppController {
 
     @ApiOperation(value="인기 검색어", notes="인기 검색어의 리스트와 검색 횟수를 반환합니다")
     @GetMapping(value = "/popular", produces = { "application/hal+json" })
-    public PopularList getPopularLists() {
-        return popularService.getLists(10);
+    public ResponseEntity getPopularLists(@RequestParam(value = "size", required = false, defaultValue = "10") Integer size ) {
+        if (size < 1 || size > 10) return ResponseEntity.badRequest().build();
+        return ResponseEntity.ok(popularService.getLists(size));
     }
 }

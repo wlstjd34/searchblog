@@ -20,10 +20,11 @@ import java.util.Map;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest
 @AutoConfigureMockMvc
-@TestInstance(TestInstance.Lifecycle.PER_CLASS)
+@TestInstance(TestInstance.Lifecycle.PER_METHOD)
 public class ControllerGetPopularListTest {
     @MockBean
     private OpenApiCaller openApiCaller;
@@ -78,14 +79,14 @@ public class ControllerGetPopularListTest {
                 .thenReturn("{\"documents\":[{\"blogname\":\"배움의 즐거움,그리고 도전\",\"contents\":\"Phonics Cue 1 두번째 시간 <b>GgHhIi</b> 스마트 파닉스로 단모음 학습을 하고 있어 Phonics Cue 는 복습으로 하는거라 알파벳 다시 복습하고 첫소리 음가 정확하게 인지하고 새로운 단어 익히고 복습이라 쉽고 빠르게 진행한다 단어 9개 익히기 알파벳과 첫소리 학습 스티커 붙이며 단어 자연스럽게 외우기 첫소리 인지...\",\"datetime\":\"2018-02-21T21:45:00.000+09:00\",\"thumbnail\":\"https://search4.kakaocdn.net/argon/130x130_85_c/9CXgv69pivZ\",\"title\":\"Phonics Cue book1 <b>GgHhIi</b>\",\"url\":\"https://blog.naver.com/sujee0814/221213582025\"},{\"blogname\":\"나의 일상에 빈틈을 만들어가는 이야기\",\"contents\":\"오랜만에 영어시간이라 Aa부터 Ff까지 복습과 reading 파트를 한번씩 읽고 새로운 알파벳인 Gg Hh Ii를 배웠다. 스스 QR찍어서 하겠다고 역시나 내 핸드폰을 훽 가로챈다. (내꺼거등...\uD83E\uDD28) \u200B 마지막에 Aa부터 Ii까지 플래쉬 카드를 이용해 메모리 게임! 이번엔 좀 더 응용해서 내가 고른 알파벳의 이름, 소리, 그 알파벳...\",\"datetime\":\"2022-03-29T23:16:00.000+09:00\",\"thumbnail\":\"https://search1.kakaocdn.net/argon/130x130_85_c/AZmLe0eapea\",\"title\":\"[잉글리쉬] 2022.3.29.화 / #파닉스 #알파벳 #<b>GgHhIi</b>\",\"url\":\"https://blog.naver.com/binteuming/222686472663\"},{\"blogname\":\"Jayse's Brunch\",\"contents\":\"style type = &#34;text/css&#34;&gt; .a { border: 1px solid #000000; display: inline-block; width: 100px; height: 100px; } &lt;div class = &#34;a&#34;&gt;AABBCC&lt;br/&gt;DDEEFF&lt;br/&gt;<b>GGHHII</b>&lt;br/&gt;&lt;/div&gt; &lt;div class = &#34;a&#34;&gt;&lt;/div&gt; 마지막 글 들이 밑 줄에 맞춰지게 된다. border: 1px solid #000000; display: inline-block; width: 100px...\",\"datetime\":\"2017-05-16T16:47:00.000+09:00\",\"thumbnail\":\"https://search4.kakaocdn.net/argon/130x130_85_c/7mR8IXF5teM\",\"title\":\"[CSS] Selector\",\"url\":\"https://blog.naver.com/operat723/221007124897\"},{\"blogname\":\"그리고는 그래서\",\"contents\":\"설득하고, 회사에서 내가 주로 하는 일인데 이는 나중에 내 자산으로 남음을 믿는다. \u200B 올해도 나는 정말 마인드는 바뀌었지만 잘 버텨왔고 잘 살아왔다? 더 잘 할 수 있었을듯한 선택지도 있겠지만. 건강하다. 그것만으로도 감사하다. \u200B 올해의 마지막일듯 마지막인듯 포스트. <b>GGHHII</b>의 게시판은 20년마스크로 변경될...\",\"datetime\":\"2020-12-21T17:29:00.000+09:00\",\"thumbnail\":\"\",\"title\":\"병원왕님의 인생한구절.\",\"url\":\"https://blog.naver.com/shindagirl/222180876761\"},{\"blogname\":\".\",\"contents\":\"AVK_WEB_ACCESS 멀티팩키 AVK_SELECT Up AVK_UP Down AVK_DOWN Left AVK_LEFT Right AVK_RIGHT 1 AVK_1 11.QqZz 2 AVK_2 22AaBbCc 3 AVK_3 33DdEeFf 4 AVK_4 44<b>GgHhIi</b> 5 AVK_5 55JjKkLl 6 AVK_6 66MmNnOo 7 AVK_7 77PpRrSs 8 AVK_8 88TtUuVv 9 AVK_9 99WwXxYy 0 AVK_0 0 * AVK_STAR / # AVK_POUNT @ 바 . 위의 모든과정...\",\"datetime\":\"2005-05-01T22:54:00.000+09:00\",\"thumbnail\":\"\",\"title\":\"brewis 강좌 모음 #1\",\"url\":\"https://blog.naver.com/topgunmagic/120012561918\"},{\"blogname\":\"나의 일상에 빈틈을 만들어가는 이야기\",\"contents\":\"놀다가 늦었다! 책읽으며 간식먹고 있는 아이를 지켜보다 안되겠어서 얼른 하자고 책을 꺼내왔다. 미안... 좀있음 동생 데리러가야지~~ ^^ \u200B 저번에 배운 #<b>GgHhIi</b> 복습하고 오늘은 #JjKkLl 배우기. 점점 외우기 어려운 알파벳으로 돌입 중! 마무리로 준비한 게임은 못했는데 오늘 미쳐 못한 부분은 주말 보충 때 해보자...\",\"datetime\":\"2022-03-31T17:16:00.000+09:00\",\"thumbnail\":\"https://search3.kakaocdn.net/argon/130x130_85_c/I0MwGzIK9pE\",\"title\":\"[잉글리쉬] 2022.3.31.목 /#파닉스 #JjKkLl\",\"url\":\"https://blog.naver.com/binteuming/222688079694\"},{\"blogname\":\"뚝이파파의 블로그\",\"contents\":\"값들을 모두 대문자로 혹은 소문자로 변경할 때 다음과 같이 Array.ConvertAll을 사용하면 편리합니다. string [] strArray = { &#34;AaBcCc&#34;, &#34;DdEeFf&#34;, &#34;<b>GgHhIi</b>&#34; }; strArray = Array.ConvertAll(strArray, x =&gt; x.ToLower()); Array.ForEach(strArray, x=&gt;Console.WriteLine(x)); strArray = Array.ConvertAll(strArray...\",\"datetime\":\"2018-03-18T00:22:00.000+09:00\",\"thumbnail\":\"\",\"title\":\"[C#] string Array 대소문자 변경\",\"url\":\"https://blog.naver.com/ambidext/221231217490\"},{\"blogname\":\"qw1337님의 블로그\",\"contents\":\"디블영11조20번5주차 Sing Together How&#39;s the Weather? ltsy Bitsy Spider shoo Fly , Don&#39;t Bother Me Phonics <b>GgHhIi</b> Sclence What is an Insect? Spider Mathmatlce Geometry:Recognizing Shapes Location : Right or Left 노래하며율동하니 깔깔깔넘어간다ㅎㅎ How&#39;s the weather? 특히 It&#39;s Windy today. 에서...\",\"datetime\":\"2020-05-31T23:07:00.000+09:00\",\"thumbnail\":\"https://search2.kakaocdn.net/argon/130x130_85_c/2mGI3DwGhkB\",\"title\":\"디.블.영.\",\"url\":\"https://blog.naver.com/qw1337/221985545752\"},{\"blogname\":\"qw1337님의 블로그\",\"contents\":\"디블영2 6주차 11조20번 \u200B Sing Together How&#39;s the Weather? ltsy Bitsy Spider shoo Fly , Don&#39;t Bother Me Phonics <b>GgHhIi</b> Sclence What is an Insect? Spider Mathmatlce Geometry:Recognizing Shapes Location : Right or Left \u200B 정말대박책됐어요ㅎㅎ shoo Fly , Don&#39;t Bother Me왤커좋아 하는지이유는모르겠지만...\",\"datetime\":\"2020-06-08T22:02:00.000+09:00\",\"thumbnail\":\"https://search2.kakaocdn.net/argon/130x130_85_c/5mdVYB4jBFN\",\"title\":\"디.블.영.2\",\"url\":\"https://blog.naver.com/qw1337/221994381714\"}],\"meta\":{\"is_end\":true,\"pageable_count\":9,\"total_count\":11}}");
     }
 
-    @AfterAll
+    @AfterEach
     public void clear() {
         searchWordRepo.deleteAll();
     }
 
     @Test
-    @DisplayName("POST /search 첫 페이지 조회 테스트")
-    public void controllerTest_postFirstPage() throws Exception {
+    @DisplayName("GET /popular 상위 10개 출력 테스트")
+    public void controllerTest_getPopular10List() throws Exception {
         // given
         List<String> keywords = List.of("abc", "def", "ghi", "jkl", "mno", "pqr", "stu", "vwx", "yza",
                 "aabbcc", "ddeeff", "gghhii");
@@ -103,6 +104,7 @@ public class ControllerGetPopularListTest {
         final ResultActions resultActions = mockMvc.perform(get("/popular"));
 
         // then
+        resultActions.andExpect(status().isOk());
         resultActions.andExpect(jsonPath("popularList[0].keyword").value("gghhii"));
         resultActions.andExpect(jsonPath("popularList[1].keyword").value("ddeeff"));
         resultActions.andExpect(jsonPath("popularList[2].keyword").value("aabbcc"));
@@ -123,5 +125,88 @@ public class ControllerGetPopularListTest {
         resultActions.andExpect(jsonPath("popularList[7].times").value(4));
         resultActions.andExpect(jsonPath("popularList[8].times").value(3));
         resultActions.andExpect(jsonPath("popularList[9].times").value(2));
+    }
+
+    @Test
+    @DisplayName("GET /popular 상위 5개 출력 테스트")
+    public void controllerTest_getPopular5List() throws Exception {
+        // given
+        List<String> keywords = List.of("abc", "def", "ghi", "jkl", "mno", "pqr", "stu", "vwx", "yza",
+                "aabbcc", "ddeeff", "gghhii");
+        for (int i = 0; i < keywords.size(); i++) {
+            for (int j = 0; j < i ; j++) {
+                mockMvc.perform(post("/search")
+                        .param("query", keywords.get(i))
+                        .param("sorting", "accuracy")
+                        .param("page", "1")
+                        .param("size", "10")
+                );
+            }
+        }
+        // when
+        final ResultActions resultActions = mockMvc.perform(get("/popular").param("size", "5"));
+
+        // then
+        resultActions.andExpect(status().isOk());
+        resultActions.andExpect(jsonPath("popularList[0].keyword").value("gghhii"));
+        resultActions.andExpect(jsonPath("popularList[1].keyword").value("ddeeff"));
+        resultActions.andExpect(jsonPath("popularList[2].keyword").value("aabbcc"));
+        resultActions.andExpect(jsonPath("popularList[3].keyword").value("yza"));
+        resultActions.andExpect(jsonPath("popularList[4].keyword").value("vwx"));
+        resultActions.andExpect(jsonPath("popularList[0].times").value(11));
+        resultActions.andExpect(jsonPath("popularList[1].times").value(10));
+        resultActions.andExpect(jsonPath("popularList[2].times").value(9));
+        resultActions.andExpect(jsonPath("popularList[3].times").value(8));
+        resultActions.andExpect(jsonPath("popularList[4].times").value(7));
+    }
+
+    @Test
+    @DisplayName("GET /popular 검색어 1개인 경우, 1개 출력 테스트")
+    public void controllerTest_getPopular1List() throws Exception {
+        // given
+        mockMvc.perform(post("/search")
+                .param("query", "abc")
+                .param("sorting", "accuracy")
+                .param("page", "1")
+                .param("size", "10"));
+        // when
+        final ResultActions resultActions = mockMvc.perform(get("/popular").param("size", "10"));
+
+        // then
+        resultActions.andExpect(status().isOk());
+        resultActions.andExpect(jsonPath("popularList[0].keyword").value("abc"));
+        resultActions.andExpect(jsonPath("popularList[0].times").value(1));
+    }
+
+    @Test
+    @DisplayName("GET /popular 잘못된 Request 입력 테스트 : n < 1")
+    public void controllerTest_getPopularListLessThan0() throws Exception {
+        // given
+        mockMvc.perform(post("/search")
+                .param("query", "abc")
+                .param("sorting", "accuracy")
+                .param("page", "1")
+                .param("size", "10"));
+        // when
+        final ResultActions resultActions = mockMvc.perform(get("/popular").param("size", "0"));
+
+        // then
+        resultActions.andExpect(status().is4xxClientError());
+    }
+
+    @Test
+    @DisplayName("GET /popular 잘못된 Request 입력 테스트 : n > 10")
+    public void controllerTest_getPopularListMoreThan10() throws Exception {
+        // given
+        mockMvc.perform(post("/search")
+                .param("query", "abc")
+                .param("sorting", "accuracy")
+                .param("page", "1")
+                .param("size", "10"));
+        // when
+        final ResultActions resultActions = mockMvc.perform(get("/popular").param("size", "11"));
+
+        // then
+        resultActions.andExpect(status().is4xxClientError());
     }
 }
