@@ -48,7 +48,7 @@ class PopularServiceTest {
     @DisplayName("입력된 검색어 중에서 상위 검색어 리스트를 가져오는지 테스트합니다")
     public void getRankingKeyWordTest() {
         // when
-        PopularList popularList = popularService.getLists();
+        PopularList popularList = popularService.getLists(10);
         List<SearchWord> result = popularList.popularList();
         //then
         Assertions.assertEquals(10,     result.size());

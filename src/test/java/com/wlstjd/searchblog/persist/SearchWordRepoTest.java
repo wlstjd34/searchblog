@@ -5,6 +5,8 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.data.domain.PageRequest;
+
 import java.util.List;
 
 @DataJpaTest
@@ -67,7 +69,7 @@ class SearchWordRepoTest {
         searchWordRepo.save(new SearchWordEntity("yz", 13));
 
         // when
-        List<SearchWordEntity> result = searchWordRepo.findTop10ByOrderByTimesDesc();
+        List<SearchWordEntity> result = searchWordRepo.findAllByOrderByTimesDesc(PageRequest.of(0, 10));
 
         // then
         Assertions.assertEquals(10,     result.size());

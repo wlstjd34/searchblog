@@ -89,6 +89,6 @@ public class BlogAppController {
     @ApiOperation(value="인기 검색어", notes="인기 검색어의 리스트와 검색 횟수를 반환합니다")
     @GetMapping(value = "/popular", produces = { "application/hal+json" })
     public PopularList getPopularLists() {
-        return popularService.getLists();
+        return popularService.getLists(10);
     }
 }
